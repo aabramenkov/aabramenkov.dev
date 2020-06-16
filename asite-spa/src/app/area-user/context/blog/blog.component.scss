@@ -1,0 +1,26 @@
+div.body{
+  height: 85vh;
+  overflow: auto;
+}
+.mat-card {
+    display:flex;
+    flex-direction: column;
+    Width: 300px;
+    height: 300px;
+    }
+  mat-card-content{
+    margin-bottom: 0px;
+    flex-grow: 1;
+    overflow: hidden;
+  }
+  span.post-author{
+    font-size: small;
+    color:#606770;
+  }
+  span.post-timeAgo{
+    font-size: small;
+    color:#606770;
+  }
+    mat-divider{
+      height: 4px;
+    }

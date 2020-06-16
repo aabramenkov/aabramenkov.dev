@@ -1,0 +1,24 @@
+
+mat-card{
+    min-height: 80vh;
+}
+img{
+    border: 2px solid white;
+    display: block;
+    margin: 10px;
+    padding: 10px;
+}
+.socialText{
+    padding-left: 20px;
+    padding-top: 5px;
+    padding-right: 10px;
+    border-radius: 15px;
+    background-color:#f2f3f5;
+    font-size: larger;
+}
+img.appAvatar{
+    border-radius: 50%;
+    max-height: 35px;
+    display: block;
+}
+

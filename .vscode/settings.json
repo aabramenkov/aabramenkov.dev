@@ -1,0 +1,30 @@
+{
+    "deploy.reloaded": {
+        "packages": [
+            {
+                "name": "Version 1.0.0",
+                "description": "Package version 1.0.0",
+
+                "files": [
+                    "asite.api/bin/Release/netcoreapp3.1/publish/**"
+                ]
+            }
+        ],
+
+        "targets": [
+            {
+                "type": "sftp",
+                "name": "Linux",
+                "description": "SFTP folder",
+
+                "host": "68.183.18.0", "port": 22,
+                "user": "root", "password": "@.HgB7*3RuEp7Uz",
+
+                "dir": "/var/aabramenkov",
+                "mappings": {
+                    "asite.api/bin/Release/netcoreapp3.1/publish/**": "/"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,17 @@
+<mat-card class="layout">
+  <div *appHasRole="['Admin', 'Moderator']" fxLayout="row">
+    <div fxFlex></div>
+    <button
+      mat-button
+      fxFlex="20px"
+      fxFlexAlign="end"
+      color="primary"
+      (click)="editArticle(article.id)"
+    >
+    <fa-icon [icon]="faPen"></fa-icon>
+    </button>
+  </div>
+  <mat-card-content>
+    <div fxFlexLayout="row" [innerHTML]="article.text | safeHtml: 'html'"></div>
+  </mat-card-content>
+</mat-card>

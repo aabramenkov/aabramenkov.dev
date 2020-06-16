@@ -1,0 +1,17 @@
+<div class="footer" fxLayout="row" fxLayoutAlign="space-between center">
+  <div>
+    <a routerLink="/privacy">Privacy policy</a>
+  </div>
+  <div fxFlexLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <div>
+      <button mat-mini-fab class="btn-social" (click)="openFacebookPage()">
+        <fa-icon [icon]="faFacebookF"></fa-icon>
+      </button>
+    </div>
+    <div>
+      <button mat-mini-fab class="btn-social" (click)="openLinkedinPage()">
+        <fa-icon [icon]="faLinkedinIn"></fa-icon>
+      </button>
+    </div>
+  </div>
+</div>

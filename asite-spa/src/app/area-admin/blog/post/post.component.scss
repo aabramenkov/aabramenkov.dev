@@ -1,0 +1,34 @@
+.btn-group {
+    padding: 2px 0 0 0
+}
+
+.btn-group > :first-child {
+    margin-right: 3px;
+}
+.hidden{
+    display: none;
+}
+fieldset {
+    border:0 none;
+    margin: 0;
+    padding: 0;
+}
+textarea{
+    width: 100%;
+}
+.uploadStatus{
+    background-color: powderblue;
+}
+.subtitle{
+    width: 500px;
+    margin-left: 20px;
+}
+.shortDescription{
+    max-height: 120px;
+    width: 90%;
+    overflow: auto;
+}
+.publishedCheckBox{
+    margin-left: 5px;
+    margin-bottom: 5px;
+}

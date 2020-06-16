@@ -1,0 +1,9 @@
+namespace jsite.api.Dtos
+{
+    public class ArticleForTreeViewDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int CategoryId { get; set; }
+    }
+}

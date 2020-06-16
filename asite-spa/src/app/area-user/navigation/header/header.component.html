@@ -1,0 +1,62 @@
+<mat-toolbar color="primary">
+  <div fxLayout="row" fxFlexFill>
+    <div fxHide.gt-xs>
+      <button mat-icon-button (click)="onToggleSidenav()">
+        <fa-icon [icon]="faBars"></fa-icon>
+      </button>
+    </div>
+    <div fxHide.lt-xl class="title">
+      <a mat-button routerLink="/main">
+        <div fxLayout="row" fxFlexFill>
+          <h1>Alex Abramenkov</h1>
+          <p>. Full Stack Dev</p>
+        </div>
+      </a>
+    </div>
+    <div fxHide.gt-lg fxHide.lt-md FxHide.lg class="title">
+      <a mat-button routerLink="/main">
+        <div fxLayout="row" fxFlexFill>
+          <h1>A. A</h1>
+          <h4>. Full Stack Dev.</h4>
+        </div>
+      </a>
+    </div>
+
+    <div fxFlex fxLayoutAlign="end">
+      <mat-nav-list fxLayout="row" fxHide.lt-sm fxLayoutAlign="end">
+        <a mat-list-item routerLink="/about">About</a>
+        <a mat-list-item routerLink="/portfolio">Portfolio</a>
+        <a mat-list-item routerLink="/contacts">Contact</a>
+        <a mat-list-item routerLink="/blog">Blog</a>
+        <a
+          *appHasRole="['Admin', 'Moderator', 'User']"
+          mat-list-item
+          routerLink="/admin"
+          >Admin Panel</a
+        >
+      </mat-nav-list>
+
+      <div class="signIn" *ngIf="!loggedIn()" fxLayoutAlign="end">
+        <button mat-raised-button color="accent" (click)="login()">
+          <i class="fas fa-sign-in-alt"></i> Sign in
+        </button>
+      </div>
+
+      <div class="signIn" *ngIf="loggedIn()" fxLayoutAlign="end">
+        <img
+          class="appAvatar"
+          [matMenuTriggerFor]="menu"
+          src="../../../../../assets/user.png"
+        />
+        <mat-menu #menu="matMenu">
+          <a mat-menu-item routerLink="/profile">
+            <i class="far fa-user"></i> Edit profile
+          </a>
+          <button mat-menu-item (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+</mat-toolbar>

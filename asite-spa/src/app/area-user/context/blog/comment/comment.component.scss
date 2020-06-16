@@ -1,0 +1,33 @@
+.comment-avatar{
+  border-radius:50%;
+    height: 25px;
+    width: 25px;
+  }
+  .comment-author{
+    font-weight: bold;
+    color: #385898;
+  }
+  .comment-body{
+    background-color:#f2f3f5;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  .comment-timeAgo{
+    font-size: small;
+    color:#606770;
+  }
+  .inputComment{
+    width: 100%;
+  }
+  .childComment{
+    margin-left: 35px;
+    margin-top: 20px;
+  }
+  .comment-actions{
+    margin: 0px 0px 0px 40px;
+  }
+  a.comment-actions-text{
+    margin: 0px 5px 0px 5px !important;
+    font-size: small;
+  }
+

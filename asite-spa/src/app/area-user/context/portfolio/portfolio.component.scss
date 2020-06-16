@@ -1,0 +1,22 @@
+.portfolio-card {
+    max-width: 400px;
+    height: 350px;
+    margin-bottom: 5px;
+  }
+
+  .mat-card{
+    display:flex;
+    flex-direction: column;
+  }
+  
+  .mat-card-header {
+    flex-shrink: 0;
+  }
+  
+  .mat-card-content{
+    flex-grow: 1;
+    overflow: hidden;
+  }
+  button{
+    float: right !important
+}

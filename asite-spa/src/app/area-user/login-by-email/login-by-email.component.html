@@ -1,0 +1,17 @@
+    <h3> Sign in with email</h3>
+    <form [formGroup]="loginForm" id="loginForm">
+      <fieldset fxLayout="column">
+      <mat-form-field>
+        <mat-label>email</mat-label>
+        <input matInput placeholder="email" formControlName="email">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>password</mat-label>
+        <input type = "password" matInput placeholder="password" formControlName="password">
+      </mat-form-field>
+    </fieldset>
+    </form>
+<div fxLayout="row">
+  <button mat-raised-button (click)="loginWithEmail()" color="accent" [disabled]="!loginForm.valid">Sign In</button>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+</div>

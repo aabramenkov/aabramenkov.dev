@@ -1,0 +1,64 @@
+<mat-card>
+  <mat-card-content>
+    <div class="divider"> </div>
+    <div fxFlexLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <div>
+        <img
+          class="appAvatar"
+          src="../../../../assets/AlexAvatar.png"
+        />
+      </div>
+      <div class="socialText">
+        <h3>
+          Wow... Really? You are here? <br>
+Great.  If you really decided to contact with me, you can easily do it using Facebook or Linkedin.<br> 
+I promise to respond as fast as possible (except if you are my ex. Sorry dear.).
+        </h3>
+      </div>
+    </div>
+    <div fxFlexLayout="row" fxLayoutAlign="space-evenly center" fxLayoutGap="10px" class="socialIcons">
+      <div>
+        <h3>Facebook:</h3>
+        <button class = "btn-social" mat-fab (click)="openFacebookPage()"><fa-icon [icon]="faFacebookF" size="2x"></fa-icon></button>
+      </div>
+      <div>
+        <h3>LinkedIn:</h3>
+        <button class = "btn-social" mat-fab (click)="openLinkedinPage()"><fa-icon [icon]="faLinkedinIn" size="2x"></fa-icon></button>
+      </div>
+    </div>
+    <div class="divider"> </div>
+    <div fxFlexLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <div>
+        <img
+          class="appAvatar"
+          src="../../../../assets/AlexAvatar.png"
+        />
+      </div>
+      <div class="socialText">
+        <h3>
+          Or you can send me an email using the form below.
+        </h3>
+      </div>
+    </div>
+    <br>
+    <div>
+    <form [formGroup]="contactForm" id="contactForm" (ngSubmit)="onSendMessage()">
+      <mat-form-field appearance="standard">
+        <mat-label>Your email</mat-label>
+        <input matInput  formControlName="email">
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="standard">
+        <mat-label>Your message</mat-label>
+        <textarea matInput  formControlName="message"> </textarea>
+      </mat-form-field>
+      <br>
+      <div *ngIf="isSendingMessageInProgress">
+        <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+      </div>
+      <br>
+      <button mat-raised-button type="submit" color="primary" [disabled]="!contactForm.valid">Send message</button>
+    </form>
+  </div>
+  </mat-card-content>
+</mat-card>

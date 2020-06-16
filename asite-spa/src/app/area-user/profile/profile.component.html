@@ -1,0 +1,15 @@
+  <div><img src="{{user.photoUrl}}" class = "appAvatar"/></div>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="userName">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="outline" >
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email"  readonly >
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit" >Submit</button>
+  </form>
+
+

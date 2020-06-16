@@ -1,0 +1,36 @@
+ 
+mat-toolbar{
+    border-radius: 3px;
+}
+ 
+@media(max-width: 959px){
+    mat-toolbar{
+        border-radius: 0px;
+    }
+}
+a.mat-list-item:hover, a.mat-list-item:active{
+    color: lightgray;
+}
+a.mat-list-item{
+    text-decoration: none;
+    color: white;
+}
+
+img.appAvatar{
+    max-height: 30px;
+    border: 2px solid white;
+    display: inline;
+    margin-right: 2px;
+    cursor: pointer; 
+}
+
+.signIn{
+    padding: 16px 0px ;
+}
+.mat-raised-button{
+    line-height:24px;
+}
+.title{
+    padding: 16px 0px ;
+    margin-left: 8px;
+}

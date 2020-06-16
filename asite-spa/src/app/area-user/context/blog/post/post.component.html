@@ -1,0 +1,56 @@
+<div fxLayout="column" fxLayoutGap="3px" class="body">
+  <mat-card class="post-card">
+    <div class="app-mat-card-header" fxLayout="row">
+      <img
+        src="../../../../assets/AlexAvatar.png"
+        class="post-avatar"
+      />
+      <div class="app-mat-card-header-text">
+        <mat-card-title>{{ post.title }}</mat-card-title>
+        <span class="post-author"> {{ post.user.userName }}</span>
+        <span class="post-timeAgo">
+          : {{ post.created.toString() | timeAgo }}</span
+        >
+      </div>
+      <button
+        *appHasRole="['Admin', 'Moderator', 'User']"
+        mat-button
+        (click)="editPost(post.id)"
+      >
+        <fa-icon [icon]="faPen"></fa-icon>
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <div [innerHTML]="post.text | safeHtml: 'html'"></div>
+    </mat-card-content>
+    <mat-card-footer>
+      <button mat-button (click)="addCommentToPost(post.id)">
+        Add comment
+      </button>
+      <button mat-button>Share</button>
+      <div *ngIf="isAddCommentFieldActive" fxLayout="column">
+        <mat-form-field class="inputComment">
+          <mat-label>Leave a comment</mat-label>
+          <textarea #comment matInput></textarea>
+        </mat-form-field>
+        <div fxLayout="row">
+          <button mat-button (click)="addCommmentPublish(comment.value)">
+            Publish
+          </button>
+          <button mat-button (click)="addCommentCancel()">Cancel</button>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div
+        *ngFor="let comment of post.comments"
+        class="comment"
+        FxLayout="column">
+        <app-comment
+          [comment]="comment"
+          (commentDeleted)="onCommentDeleted($event)">
+        </app-comment>
+      </div>
+    </mat-card-footer>
+  </mat-card>
+</div>

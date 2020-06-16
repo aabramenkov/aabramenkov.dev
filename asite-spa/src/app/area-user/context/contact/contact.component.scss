@@ -1,0 +1,45 @@
+
+mat-card{
+    min-height: 80vh;
+    padding-left: 100px;
+}
+
+img.appAvatar{
+    border-radius: 50%;
+    max-height: 50px;
+    display: block;
+}
+
+.divider {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-color: gainsboro;
+ }
+ .socialText{
+     padding-left: 20px;
+     padding-top: 5px;
+     padding-right: 10px;
+     border-radius: 15px;
+     background-color: #8eacbb;
+ }
+ form{
+     padding-left: 70px;
+ }
+ mat-form-field{
+     width:400px;
+ }
+ mat-form-field{
+    min-width: 30%;
+    max-width: 100%;
+
+ }
+ .socialIcons{
+     margin-top: 30px;
+ }
+
+ .btn-social:hover{
+     opacity: 0.75;
+ }

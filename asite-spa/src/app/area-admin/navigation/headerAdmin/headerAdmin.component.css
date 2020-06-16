@@ -1,0 +1,17 @@
+ 
+mat-toolbar{
+    border-radius: 3px;
+}
+ 
+@media(max-width: 959px){
+    mat-toolbar{
+        border-radius: 0px;
+    }
+}
+a.mat-list-item:hover, a.mat-list-item:active{
+    color: lightgray;
+}
+a.mat-list-item{
+    text-decoration: none;
+    color: white;
+}

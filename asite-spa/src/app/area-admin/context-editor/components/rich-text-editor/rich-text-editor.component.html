@@ -1,0 +1,73 @@
+<form #texteditorForm="ngForm">
+  <fieldset  [disabled]="article.id==0 ? true : false">
+  <mat-form-field>
+    <mat-label>Name (using in database only)</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="Article Title"
+      required
+      [(ngModel)]="article.name"
+      name="name"
+    />
+  </mat-form-field>
+  <div>
+  <mat-form-field>
+    <mat-label>Title</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="Article Title"
+      required
+      [(ngModel)]="article.title"
+      name="title"
+    />
+  </mat-form-field>
+  <mat-form-field class="subtitle">
+    <mat-label>Subtitle</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="Article Title"
+      required
+      [(ngModel)]="article.subtitle"
+      name="subtitle"
+    />
+  </mat-form-field>
+</div>
+<div fxLayout="row" fxLayoutAlign="space-around end" >
+  <div fxFlex="80">
+    <p><strong>Short Desctription</strong> </p>
+    <div [innerHTML]="article.shortDescription | safeHtml: 'html'" class="shortDescription"></div>
+</div>
+<div >
+  <mat-button-toggle-group [value]="showInEditorToggle" #group="matButtonToggleGroup" (change)="onShowInEditorChange(group.value)">
+    <mat-button-toggle value="text">
+      Article Text
+    </mat-button-toggle>
+    <mat-button-toggle value="description">
+      Article Short Description
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+</div>
+  <editor [ngModel]="tinyMceEditorModel" (ngModelChange)="tinyMceEditorModelOnChange($event)" name="editor" [init]="editorConfig" [disabled]="article.id==0 ? true : false">
+  </editor>
+  <div *ngIf="isLoadInProgress">
+  <mat-progress-bar mode="indeterminate" color="warn"></mat-progress-bar>
+</div>
+</fieldset>
+</form>
+<div class="btn-group">
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!texteditorForm.form.valid || !texteditorForm.form.dirty"
+    (click)="OnSubmit()"
+  >
+    Submit
+  </button>
+  <button mat-raised-button color="accent" (click)="OnCancel()">Cancel</button>
+</div>
+
+<input type="file" id="selectFile" class="hidden" (change)="handleFileInput($event.target.files)"/>

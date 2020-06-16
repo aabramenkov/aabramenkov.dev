@@ -1,0 +1,13 @@
+<h3 mat-dialog-title>{{headerText}}</h3>
+<div mat-dialog-content class="mat-typography">
+  <div fxLayout="column" fxLayoutGap="5px">
+    <button class="btn-facebook" (click)="Login('facebook')">
+      <fa-icon [icon]="faFacebookF" size="lg"></fa-icon>
+      <span>Facebook</span>
+    </button>
+    <button class="btn-linkedin" (click)="Login('linkedin')">
+      <fa-icon [icon]="faLinkedinIn" size="lg"></fa-icon>
+      <span>LinkedIn</span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+
+.layout{
+    min-height: 80vh;
+}
+.test{
+    background: gray;
+    width: 300px;
+    height: 300px;
+    transform: scale(0.1);
+    transition: all 0.5s;
+    margin-top: -150px;
+    margin-bottom: -150px
+
+}
+
+.test:hover{
+    transform-origin: 50% 50%;
+    transform: scale(1)
+
+}

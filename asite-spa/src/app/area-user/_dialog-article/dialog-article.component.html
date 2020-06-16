@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content class="mat-typography">
+  <p>{{ data.subtitle }}</p>
+  <mat-divider></mat-divider>
+  <div class="content">
+    <img src="../../../../assets/AlexAvatar.png" class="avatar" />
+    <div [innerHTML]="data.text | safeHtml: 'html'"></div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div fxLayout="row" fxFlexFill>
+    <div fxFlex>
+      <button mat-button (click)="navigateToContact()">
+        Interested? Contact me now!
+      </button>
+    </div>
+    <div fxFlex fxFlexAlign="stretch"></div>
+    <div fxFlex="70px">
+      <button mat-raised-button mat-dialog-close cdkFocusInitial>Close</button>
+    </div>
+  </div>
+</mat-dialog-actions>

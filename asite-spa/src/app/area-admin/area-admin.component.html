@@ -1,0 +1,11 @@
+<mat-sidenav-container >
+    <mat-sidenav mode="side" opened [fixedInViewport]="true">
+      <app-sidenav-list-admin ></app-sidenav-list-admin>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <app-header-admin ></app-header-admin>
+      <main>
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>

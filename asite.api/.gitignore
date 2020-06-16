@@ -1,0 +1,8 @@
+.vscode
+bin
+obj
+wwwroot
+*.Db
+appsettings.*
+Seed.*
+**/Configuration

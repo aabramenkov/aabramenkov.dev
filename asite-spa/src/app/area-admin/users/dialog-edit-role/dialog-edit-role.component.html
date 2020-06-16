@@ -1,0 +1,16 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Roles for {{ user.userName }}</mat-card-title>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <div *ngFor="let role of roles">
+      <mat-checkbox [(ngModel)]="role.checked">{{ role.name }}</mat-checkbox>
+    </div>
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions>
+    <button mat-raised-button color="accent" [mat-dialog-close]="data.roles" cdkFocusInitial>Ok</button>
+    <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,57 @@
+<form #texteditorForm="ngForm">
+    <fieldset >
+    <div fxLayout="column">
+      <mat-checkbox #publishedCheckBox [checked]="post.published" (change)="postPublishedChange(publishedCheckBox.checked)" class="publishedCheckBox">Published</mat-checkbox>
+      <div> Url: aabramenkov.dev/blog/post/{{slugify(post.title)}}</div>
+      <mat-form-field >
+        <mat-label>Title</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Article Title"
+          required
+          [(ngModel)]="post.title"
+          name="title"/>
+      </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-around end" >
+    <div fxFlex="80">
+      <p><strong>Desctription</strong> </p>
+      <div [innerHTML]="post.description | safeHtml: 'html'" class="shortDescription"></div>
+  </div>
+  <div >
+    <mat-button-toggle-group [value]="showInEditorToggle" #group="matButtonToggleGroup" (change)="onShowInEditorChange(group.value)">
+      <mat-button-toggle value="text">
+        Edit post text
+      </mat-button-toggle>
+      <mat-button-toggle value="description">
+        Edit post description
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  </div>
+    <editor 
+      [ngModel]="tinyMceEditorModel" 
+      (ngModelChange)="tinyMceEditorModelOnChange($event)" 
+      name="editor" 
+      [init]="editorConfig">
+    </editor>
+    <div *ngIf="isLoadInProgress">
+    <mat-progress-bar mode="indeterminate" color="warn"></mat-progress-bar>
+  </div>
+  </fieldset>
+  </form>
+  <div class="btn-group">
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!texteditorForm.form.valid || !texteditorForm.form.dirty"
+      (click)="OnSubmit()"
+    >
+      Submit
+    </button>
+    <button mat-raised-button color="accent" (click)="onCancel()">Cancel</button>
+  </div>
+  
+  <input type="file" id="selectFile" class="hidden" (change)="handleFileInput($event.target.files)"/>
+  
