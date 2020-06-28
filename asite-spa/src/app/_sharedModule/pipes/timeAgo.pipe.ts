@@ -2,8 +2,8 @@ import {
   Pipe,
   PipeTransform,
   OnDestroy,
-  ChangeDetectorRef,
   NgZone,
+  ChangeDetectorRef,
 } from '@angular/core';
 
 @Pipe({
