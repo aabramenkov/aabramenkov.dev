@@ -1,3 +1,4 @@
+using asite.api.Dtos;
 using AutoMapper;
 using jsite.api.Dtos;
 using jsite.api.Models;
@@ -16,6 +17,7 @@ namespace jsite.api.Helpers
             CreateMap<User, UserForReturnDto>();
             CreateMap<Post, PostDto>();
             CreateMap<PostDto, Post>();
+            CreateMap<User, UserForSnakeScoreDto>();
         }
     }
 }

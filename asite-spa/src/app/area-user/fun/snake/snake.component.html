@@ -1,0 +1,40 @@
+<div class="main-grid" >
+  <div class="game">
+    <div class="game-header-container">
+        <h1 class="game-title">Snake</h1>
+        <span class="game-score">Score: {{ state.game.snake.length - 3 }}</span>
+        <div class="game-info-container">
+          <button (click)="handleStartClick()" *ngIf="!isRunning">Start Game</button>
+          <button (click)="handlePauseClick()" *ngIf="isRunning">Pause Game</button>
+        </div>
+      </div>
+      
+      <div class="snake-grid-container">
+        <div class="snake-grid" *ngIf="state">
+          <ng-container *ngFor="let row of grid; index as rowIndex; trackBy: trackByIndex">
+            <div class="tile" [class.food]="tile.isFood" [class.snake]="tile.isSnake"
+              [class.head]="tile.isSnakeHead" [ngStyle]="{ 'grid-row': rowIndex + 1 }"
+              *ngFor="let tile of row; trackBy: trackByIndex">
+            </div>
+          </ng-container>
+        </div>
+      
+        <div class="game-over" *ngIf="state.game.gameOver">
+          <span>Game Over</span>
+          <span>Score: {{ state.game.snake.length - 3 }}</span>
+          <button class="snake-reset" (click)="handleResetClick()">Reset</button>
+        </div>
+      </div>
+  </div>
+  <div class="game-score">
+    <div fxLayout="column" fxLayoutAlign="start start">
+      <div style="text-align: center;"><p>Top snakers</p> </div>
+      <mat-card *ngFor="let gamer of gamers">
+        <mat-card-content>
+          {{gamer.userName}} score: {{gamer.snakeScore}}
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+  

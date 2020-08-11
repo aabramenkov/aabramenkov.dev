@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '',
     component: AreaUserComponent,
     children: [
-      { path: '', redirectTo: 'about', pathMatch: 'full'},
+      { path: '', redirectTo: 'about', pathMatch: 'full' },
       { path: 'about', component: AboutComponent },
       {
         path: 'login',
@@ -31,7 +31,12 @@ const routes: Routes = [
           import('./area-user/context/portfolio/portfolio.module').then(
             (m) => m.PortfolioModule
           ),
+      },      {
+        path: 'fun',
+        loadChildren: () =>
+          import('./area-user/fun/fun.module').then((m) => m.FunModule),
       },
+
       {
         path: 'contacts',
         loadChildren: () =>
@@ -81,7 +86,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
   ],
   exports: [RouterModule],
 })

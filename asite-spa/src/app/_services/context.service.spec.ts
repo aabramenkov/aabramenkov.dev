@@ -94,7 +94,7 @@ describe('ContextService', () => {
     req.event(expectedResponse);
   });
 
-  it('getCategories', ()=>{
+  it('getCategories', () => {
       const categiries = [{
         id: 1,
         name: 'name'

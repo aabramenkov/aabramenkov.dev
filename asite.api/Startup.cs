@@ -40,7 +40,7 @@ namespace jsite.api
         {
             services.AddDbContext<DataContext>(x =>
             {
-                x.UseLazyLoadingProxies();
+                // x.UseLazyLoadingProxies();
                 x.UseMySql(Configuration.GetConnectionString("DefaultConnectoin"));
             });
 

@@ -12,4 +12,5 @@ export interface User {
     roles?: string[];
     posts?: Post[];
     comments?: Comment[];
+    snakeScore?: number;
 }

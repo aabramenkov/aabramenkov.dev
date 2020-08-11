@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using asite.api.Dtos;
 using AutoMapper;
 using jsite.api.Dtos;
 using jsite.api.Models;
@@ -103,6 +104,7 @@ namespace jsite.api.Controllers
                 return BadRequest("failed to update user");
             return Ok(_mapper.Map<UserForReturnDto>(user));
         }
+
 
     }
 }
