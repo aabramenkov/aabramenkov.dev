@@ -41,3 +41,10 @@ export interface Invitation {
   initialFigure: 'X' | 'O';
   sent: Data;
 }
+
+export interface Message {
+  from: string;
+  to: string;
+  sent: Date;
+  text: string;
+}

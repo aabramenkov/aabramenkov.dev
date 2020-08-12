@@ -1,1 +1,37 @@
-<p>renju works!</p>
+<div class="game-header-container">
+    <div *ngIf="state.game.gameStarted">
+    <div><p>{{state.game.thisGamer?.userName}}: {{state.game.thisGamer?.figure}}</p></div>
+    <div><p>{{state.game.opponentGamer?.userName}}: {{state.game.opponentGamer?.figure}}</p></div>
+  </div>
+  </div>
+  
+  
+  <div class="renju-grid-container">
+    <div class="renju-grid">
+      <ng-container *ngFor="let row of grid; index as rowIndex">
+        <div
+          class="tile"
+          [ngClass]="{ isWinning: tile.isWinning === 1 }"
+          [ngClass]="{ isLoser: tile.isWinning === -1 }"
+          *ngFor="let tile of row; index as columnIndex"
+          [ngStyle]="{ 'grid-row': rowIndex + 1 }"
+          (click)="clickTile(rowIndex, columnIndex)"
+        >
+          {{ tile.value }}
+        </div>
+      </ng-container>
+    </div>
+  
+    <div class="game-over" *ngIf="state.game.gameOver">
+      <span>Game Over.</span>
+      <button class="snake-reset" (click)="handleResetClick()">Ok</button>
+    </div>
+  </div>
+  
+  <button (click)="getActiveGamers()">Get Active Gamers</button>
+  
+  <div *ngFor="let gamer of activeGamers">
+    {{ gamer }} <button (click)="inviteGamer(gamer)">Invite to Game</button>
+  </div>
+  <app-renju-chat userNameFrom = "{{state.game.thisGamer?.userName}}" userNameTo="{{state.game.opponentGamer?.userName}}"></app-renju-chat>
+  

@@ -24,6 +24,8 @@ using jsite.api.GraphQL.Queries;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using GraphQL.Server.Ui.GraphiQL;
 using jsite.api.GraphQL.GraphInputTypes;
+using Renju.HubConfig;
+using Renju;
 
 namespace jsite.api
 {
@@ -123,6 +125,12 @@ namespace jsite.api
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
 
+            services.AddSignalR();
+            services.AddSingleton<IConnectionManager, ConnectionManager>();
+            // services.AddSingleton<IHubNotificationHelper, HubNotificationHelper>();
+            services.AddScoped<LogUserEnterSite>();
+
+
             ConfigureGraphQL(services);
         }
 
@@ -154,7 +162,7 @@ namespace jsite.api
 
             }
             app.UseRouting();
-            app.UseCors(x => x.WithOrigins("https://localhost:4200", "https://aabramenkov.com").AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x.WithOrigins("https://localhost:4200", "https://aabramenkov.dev").AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseDefaultFiles();
@@ -165,6 +173,7 @@ namespace jsite.api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<RenjuHub>("/renju");
                 endpoints.MapFallbackToController("Index", "Fallback");
             });
         }

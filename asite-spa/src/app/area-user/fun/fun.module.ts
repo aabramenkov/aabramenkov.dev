@@ -5,15 +5,16 @@ import { FunComponent } from './fun.component';
 import {FunRoutingModule} from './fun-routing.module';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
-import { RenjuComponent } from './renju/renju.component';
+import { RenjuModule } from './renju/renju.module';
 
 @NgModule({
-  declarations: [SnakeComponent, FunComponent, RenjuComponent],
+  declarations: [SnakeComponent, FunComponent],
   imports: [
     CommonModule,
     FunRoutingModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    RenjuModule
   ],
 })
 export class FunModule { }
