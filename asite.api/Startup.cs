@@ -64,6 +64,7 @@ namespace jsite.api
             });
 
             ConfigureServices(services);
+            ConfigureGraphQL(services);
         }
 
 
@@ -127,11 +128,7 @@ namespace jsite.api
 
             services.AddSignalR();
             services.AddSingleton<IConnectionManager, ConnectionManager>();
-            // services.AddSingleton<IHubNotificationHelper, HubNotificationHelper>();
-            services.AddScoped<LogUserEnterSite>();
 
-
-            ConfigureGraphQL(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -162,7 +159,8 @@ namespace jsite.api
 
             }
             app.UseRouting();
-            app.UseCors(x => x.WithOrigins("https://localhost:4200", "https://aabramenkov.dev").AllowAnyMethod().AllowAnyHeader());
+            // app.UseCors(x => x.WithOrigins("https://localhost:4200", "https://aabramenkov.dev").AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseDefaultFiles();

@@ -56,16 +56,5 @@ namespace Renju.HubConfig
 
             }
         }
-
-        public void DebugConnection(string methodName){
-            Debug.WriteLine($"in method {methodName}");
-            foreach (var userName_ in userMap.Keys){
-                foreach(var conn in userMap[userName_]){
-                    Debug.WriteLine($"userName_ = {userName_} conn= {conn}");
-                }
-            }
-            Debug.WriteLine("=========================");
-        }
-
     }
 }

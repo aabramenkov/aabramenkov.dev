@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,6 @@ private baseApi = 'http://localhost:5000/api/renju/';
    }
 
    public activeGamers(): Observable<string[]>{
-     return this.http.get<string[]>(this.baseApi + 'gamers');
+    return this.http.get<string[]>(this.baseApi + 'allgamers');
    }
 }

@@ -45,6 +45,7 @@ export class SnakeComponent implements OnInit {
   private unsubscribe$ = new Subject();
   public gamers: Gamer[] = [];
   private currentGamer: Gamer;
+  private tickTest$ = interval(TICK_INTERVAL);
 
   public get grid(): Tile[][] {
     return this.state.game.map.grid;
@@ -106,7 +107,9 @@ export class SnakeComponent implements OnInit {
       )
     );
     const tick$ = interval(TICK_INTERVAL).pipe(
-      tap(() => this.store.reduce(tickReducer))
+      tap(() => {
+        this.store.reduce(tickReducer);
+      })
     );
 
     const game$ = merge(direction$, tick$);
@@ -115,7 +118,7 @@ export class SnakeComponent implements OnInit {
       .select((state) => state.game.gameOver)
       .pipe(
         filter((gameOver) => gameOver),
-        concatMap(() => this.updateCurrentGamerScore())
+        tap(() => this.updateCurrentGamerScore())
       );
 
     this.running
@@ -129,14 +132,13 @@ export class SnakeComponent implements OnInit {
       .subscribe();
   }
 
-  private updateCurrentGamerScore(): Observable<any> {
+  private updateCurrentGamerScore() {
     const gamer = this.gamers.find((g) => g.id === this.currentGamer.id);
     if (gamer.snakeScore < this.state.game.snake.length - 3) {
       gamer.snakeScore = this.state.game.snake.length - 3;
       this.gamers.sort((a, b) => b.snakeScore - a.snakeScore);
-      return this.gamersService.updateGamerScore(gamer.id, gamer.snakeScore);
+      this.gamersService.updateGamerScore(gamer.id, gamer.snakeScore);
     }
-    return EMPTY;
   }
 
   private setupGameRender() {

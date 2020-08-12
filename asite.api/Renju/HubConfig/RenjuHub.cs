@@ -20,14 +20,12 @@ namespace Renju.HubConfig
             var httpContext = this.Context.GetHttpContext();
             var userName = httpContext.Request.Query["username"];
             _connectionManager.AddConnection(userName, Context.ConnectionId);
-            _connectionManager.DebugConnection("After OnConnectedAsync");
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
             _connectionManager.RemoveConnection(Context.ConnectionId);
-            _connectionManager.DebugConnection("After OnDisconnectedAsync");
 
             return base.OnDisconnectedAsync(exception);
         }
