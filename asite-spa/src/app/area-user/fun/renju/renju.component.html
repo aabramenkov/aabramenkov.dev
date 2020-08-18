@@ -1,20 +1,25 @@
-<div class="game-header-container">
-    <div *ngIf="state.game.gameStarted">
-    <div><p>{{state.game.thisGamer?.userName}}: {{state.game.thisGamer?.figure}}</p></div>
-    <div><p>{{state.game.opponentGamer?.userName}}: {{state.game.opponentGamer?.figure}}</p></div>
-  </div>
-  </div>
-  
-  
+<div class="main-grid" >
+
   <div class="renju-grid-container">
+    <div>
+      <button mat-raised-button (click)="inviteOpponent()">Invite opponent</button>
+      <div *ngFor="let gamer of activeGamers">
+        {{gamer}}
+      </div>
+    </div>
+
+    <div class="game-header-container">
+        <div>This gamer: {{state.game.thisGamer?.userName || "not selected" }}: {{state.game.thisGamer?.figure}}</div>
+        <div>Opponent: {{state.game.opponentGamer?.userName || "not selected"}}: {{state.game.opponentGamer?.figure}}</div>
+    </div>
+
     <div class="renju-grid">
       <ng-container *ngFor="let row of grid; index as rowIndex">
-        <div
-          class="tile"
-          [ngClass]="{ isWinning: tile.isWinning === 1 }"
-          [ngClass]="{ isLoser: tile.isWinning === -1 }"
-          *ngFor="let tile of row; index as columnIndex"
-          [ngStyle]="{ 'grid-row': rowIndex + 1 }"
+        <div class="tile"
+        *ngFor="let tile of row; index as columnIndex"
+        [ngStyle]="{ 'grid-row': rowIndex + 1 }"
+        [ngClass]="{ isWinning: tile.isWinning === 1 }"
+        [ngClass]="{ isLoser: tile.isWinning === -1 }"
           (click)="clickTile(rowIndex, columnIndex)"
         >
           {{ tile.value }}
@@ -24,14 +29,11 @@
   
     <div class="game-over" *ngIf="state.game.gameOver">
       <span>Game Over.</span>
-      <button class="snake-reset" (click)="handleResetClick()">Ok</button>
+      <button mat-raised-button (click)="handleResetClick()">Ok</button>
     </div>
+
   </div>
   
-  <button (click)="getActiveGamers()">Get Active Gamers</button>
-  
-  <div *ngFor="let gamer of activeGamers">
-    {{ gamer }} <button (click)="inviteGamer(gamer)">Invite to Game</button>
-  </div>
   <app-renju-chat userNameFrom = "{{state.game.thisGamer?.userName}}" userNameTo="{{state.game.opponentGamer?.userName}}"></app-renju-chat>
+</div>
   

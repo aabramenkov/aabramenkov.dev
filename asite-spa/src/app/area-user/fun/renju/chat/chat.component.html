@@ -1,6 +1,8 @@
-<div *ngFor="let message of messages">
-    <p>{{message.from}} => {{message.text}}</p>
+<p>Chat</p>
+<div class="chatBox">
+  <div *ngFor="let message of messages" class="msg" [ngClass]="{msgTo: message.from==='Alex', msgFrom: message.from!=='Alex'}">
+      {{ message.from }}: {{ message.text }}
+  </div>
 </div>
-<input #msgText >
-<button (click)="sendMessage(msgText.value)">Send</button>
-
+<textarea matInput #msgText class="inputMsgBox"></textarea>
+<button mat-mini-fab (click)="sendMessage(msgText.value)">Send</button>

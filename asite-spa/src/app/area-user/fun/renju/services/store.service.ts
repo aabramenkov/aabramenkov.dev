@@ -28,7 +28,6 @@ export class StoreService {
   public reduce(reducer: (state: GameState) => Observable<GameState>) {
     // const newState = reducer(this.state.value);
     // this.state.next(newState);
-    console.log(reducer);
     reducer(this.state.value).subscribe((newState: GameState) => this.state.next(newState));
   }
 

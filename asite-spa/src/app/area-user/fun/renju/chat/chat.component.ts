@@ -8,7 +8,7 @@ import { Message } from '../models/models';
   styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnInit {
-  public messages: Message[] = [];
+  public messages: Message[]; // = [];
   @Input() userNameFrom: string;
   @Input() userNameTo: string;
   @ViewChild('msgText') msgInput: ElementRef;
@@ -16,10 +16,36 @@ export class ChatComponent implements OnInit {
   constructor(private signalrService: SignalrService) {}
 
   ngOnInit(): void {
-    this.signalrService.messageListener().subscribe((message: Message) => {
-      this.messages.push(message);
-      this.msgInput.nativeElement.value = '';
-    });
+    this.messages = [
+      {
+        from: 'Alex',
+        to: 'Julia',
+        sent: new Date(),
+        text: 'Hi',
+      },
+      {
+        from: 'Julia',
+        to: 'Alex',
+        sent: new Date(),
+        text: 'Hi',
+      },
+      {
+        from: 'Alex',
+        to: 'Julia',
+        sent: new Date(),
+        text: 'How are u?',
+      },
+      {
+        from: 'Julia',
+        to: 'Alex',
+        sent: new Date(),
+        text: 'thx, and you?',
+      },
+    ];
+    // this.signalrService.messageListener().subscribe((message: Message) => {
+    //   this.messages.push(message);
+    //   this.msgInput.nativeElement.value = '';
+    // });
   }
 
   sendMessage(msgText: string) {
@@ -32,5 +58,3 @@ export class ChatComponent implements OnInit {
     this.signalrService.sendMessage(message);
   }
 }
-
-

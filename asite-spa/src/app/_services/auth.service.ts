@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../_models/user.model';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { LoginDialogComponent } from '../area-user/login-dialog/login-dialog.component';
+import { Url } from 'url';
 
 @Injectable({
   providedIn: 'root',
@@ -46,7 +47,10 @@ export class AuthService {
     }
   }
 
-  login(header: string) {
+  login(header: string, initialUrl?: string) {
+    if (initialUrl){
+      localStorage.setItem('actualPageUrl', initialUrl);
+    }
     const initialState = {
       headerText: header,
     };

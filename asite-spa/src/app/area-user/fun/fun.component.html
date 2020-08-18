@@ -1,8 +1,3 @@
 <button mat-raised-button (click)="selectGame('snake')">Snake</button>
 <button mat-raised-button (click)="selectGame('renju')">Renju</button>
-<ng-container *ngIf="gameSnakeSelect">
-  <app-snake></app-snake>
-</ng-container>
-<ng-container *ngIf="gameRenjuSelect">
-  <app-renju></app-renju>
-</ng-container>
+<router-outlet></router-outlet>

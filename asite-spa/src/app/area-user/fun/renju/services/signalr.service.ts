@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
-import { Game, Tile, Move, Invitation, Message } from '../models/models';
-import { ReplaySubject, Subject, Observable } from 'rxjs';
+import { Move, Invitation, Message } from '../models/models';
+import { ReplaySubject, Subject, Observable, from } from 'rxjs';
 import { AuthService } from 'src/app/_services/auth.service';
 
 @Injectable({
@@ -14,7 +14,14 @@ export class SignalrService {
 
   constructor(private authService: AuthService) {}
 
-  public startConnection() {
+  public connectionState(): boolean {
+    if (this.hubConnection){
+      return this.hubConnection?.state !== 0;
+    }
+    return false;
+  }
+
+  public startConnection(): Promise<void> {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(
         `http://localhost:5000/renju?username=${this.authService.currentUser.userName}`,
@@ -25,10 +32,11 @@ export class SignalrService {
       )
       .build();
 
-    this.hubConnection
-      .start()
-      .then(() => console.log('Connection started'))
-      .catch((err) => console.log('Error on starting connection: ' + err));
+    return this.hubConnection.start();
+    // this.hubConnection
+    //   .start()
+    //   .then(() => console.log('Connection started'))
+    //   .catch((err) => console.log('Error on starting connection: ' + err));
   }
 
   public broadcastMove(move: Move) {

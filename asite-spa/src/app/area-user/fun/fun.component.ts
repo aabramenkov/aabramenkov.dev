@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-fun',
@@ -6,21 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./fun.component.scss']
 })
 export class FunComponent implements OnInit {
-  gameSnakeSelect: boolean = true;
-  gameRenjuSelect: boolean = false;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
   selectGame(game: string){
     if (game === 'snake'){
-      this.gameSnakeSelect = true;
-      this.gameRenjuSelect = false;
+      this.router.navigate(['/fun/snake']);
     }
     if (game === 'renju'){
-      this.gameSnakeSelect = false;
-      this.gameRenjuSelect = true;
+      this.router.navigate(['/fun/renju']);
     }
 
   }

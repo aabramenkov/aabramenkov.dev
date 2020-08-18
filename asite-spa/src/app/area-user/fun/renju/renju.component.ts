@@ -1,12 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { Tile, Game, Gamer, Move, Invitation, GameState } from './models/models';
+import {
+  Tile,
+  Game,
+  Gamer,
+  Move,
+  Invitation,
+  GameState,
+} from './models/models';
 import { SignalrService } from './services/signalr.service';
 import { HttpService } from './services/http.service';
-import { BehaviorSubject, Subject, merge } from 'rxjs';
+import { BehaviorSubject, Subject, merge, pipe, of } from 'rxjs';
 import { StoreService } from './services/store.service';
-import { takeUntil, switchMap, tap, filter } from 'rxjs/operators';
+import { takeUntil, switchMap, tap, filter, map } from 'rxjs/operators';
 import { ReducersService } from './services/reducers.service';
 import { AuthService } from 'src/app/_services/auth.service';
+import { AlertService } from './services/alert.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { InviteGamerDialogComponent } from './dialogs/invite-gamer-dialog/invite-gamer-dialog.component';
 
 @Component({
   selector: 'app-renju',
@@ -25,38 +36,47 @@ export class RenjuComponent implements OnInit {
   }
 
   constructor(
+    public authService: AuthService,
     private signalrService: SignalrService,
     private httpService: HttpService,
     private store: StoreService,
     private reducersService: ReducersService,
-    private authService: AuthService
+    private alertService: AlertService,
+    private router: Router,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this.signalrService.startConnection(); // TODO
-    this.signalrService.addMoveListener(); // TODO
-
-    this.setupGame();
     this.setupGameRender();
+  }
+
+  runWebsocketConnection() {
+    // this.signalrService.startConnection();
+    this.signalrService.addMoveListener();
+    this.setupGame();
     this.running.next(true);
   }
 
   setupGame() {
     const move$ = this.signalrService.moveSubject.pipe(
       tap((move: Move) => {
-        this.store.reduce((state) => this.reducersService.getMoveReducer(state, move));
+        this.store.reduce((state) =>
+          this.reducersService.getMoveReducer(state, move)
+        );
       })
     );
 
     const invite$ = this.signalrService.gameInvitationListener().pipe(
       tap((invitation: Invitation) => {
-        this.store.reduce((state) => this.reducersService.inviteReducer(state, invitation));
+        this.store.reduce((state) =>
+          this.reducersService.inviteReducer(state, invitation)
+        );
       })
     );
 
-    const gameOver$ = this.store.select(state => state.game.gameOver).pipe(
-      filter(gameOver => gameOver),
-    );
+    const gameOver$ = this.store
+      .select((state) => state.game.gameOver)
+      .pipe(filter((gameOver) => gameOver));
 
     const game$ = merge(invite$, move$);
 
@@ -82,11 +102,14 @@ export class RenjuComponent implements OnInit {
   }
 
   clickTile(i: number, j: number) {
+    this.alertService.showMessage('clicked', '');
     if (!this.state.game.opponentGamer) {
       alert('invate opponent');
       return;
     }
-    if (this.state.game.lastMove?.from === this.authService.currentUser.userName) {
+    if (
+      this.state.game.lastMove?.from === this.authService.currentUser.userName
+    ) {
       alert('you should wait partners move');
       return;
     }
@@ -100,13 +123,43 @@ export class RenjuComponent implements OnInit {
     this.reducersService.sendMoveReducer(this.state, tile);
   }
 
+  inviteOpponent() {
+    if (!this.authService.loggedIn()) {
+      this.authService.login(
+        'Please register if you want to play game',
+        this.router.url
+      );
+      return;
+    }
+    if (!this.signalrService.connectionState()) {
+      this.signalrService.startConnection().then(() => {
+        this.getActiveUsers();
+      });
+      return;
+    }
+    this.getActiveUsers();
+  }
 
-  getActiveGamers() {
-    this.httpService.activeGamers().subscribe((data) => {
-      this.activeGamers = data;
-      const index = this.activeGamers.indexOf(this.authService.currentUser.userName);
-      this.activeGamers[index] = this.activeGamers[index] + ' (this gamer)';
-    });
+  getActiveUsers() {
+    this.httpService
+      .activeGamers()
+      .pipe(
+        map((data) => {
+          const activeGamers = data;
+          const index = activeGamers.indexOf(
+            this.authService.currentUser.userName
+          );
+          activeGamers[index] = activeGamers[index] + ' (this gamer)';
+          return activeGamers;
+        }),
+        switchMap((acitveGamers) => {
+          const dialogRef = this.dialog.open(InviteGamerDialogComponent, {
+             data: { activeGamers: acitveGamers }
+          });
+          return dialogRef.afterClosed();
+        })
+      )
+      .subscribe(gamer => this.inviteGamer(gamer));
   }
 
   inviteGamer(gamer: string) {

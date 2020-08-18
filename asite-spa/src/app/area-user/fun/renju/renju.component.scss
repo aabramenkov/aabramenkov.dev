@@ -1,14 +1,22 @@
+.main-grid { 
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2vw;
+  }
+
 .renju-grid-container {
     position: relative;
+    align-items: flex-end;
     display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .game-header-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    flex-direction: column;
+}
+  
+.game-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
   
 .renju-grid {
     display: grid;
