@@ -14,7 +14,7 @@ export class SignalrService {
 
   constructor(private authService: AuthService) {}
 
-  public connectionState(): boolean {
+  public get isConnected(): boolean {
     if (this.hubConnection){
       return this.hubConnection?.state !== 0;
     }
@@ -33,10 +33,6 @@ export class SignalrService {
       .build();
 
     return this.hubConnection.start();
-    // this.hubConnection
-    //   .start()
-    //   .then(() => console.log('Connection started'))
-    //   .catch((err) => console.log('Error on starting connection: ' + err));
   }
 
   public broadcastMove(move: Move) {

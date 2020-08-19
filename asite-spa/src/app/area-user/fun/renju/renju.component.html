@@ -1,16 +1,17 @@
 <div class="main-grid" >
 
   <div class="renju-grid-container">
-    <div>
-      <button mat-raised-button (click)="inviteOpponent()">Invite opponent</button>
+    <div>      
+      <button mat-raised-button (click)="registerInGame()" *ngIf="!isConnected">Register in Game</button>
+      <button mat-raised-button (click)="inviteOpponent()" *ngIf="isConnected" [disabled] ="state.game.gameStarted">Invite opponent</button>
       <div *ngFor="let gamer of activeGamers">
         {{gamer}}
       </div>
     </div>
 
     <div class="game-header-container">
-        <div>This gamer: {{state.game.thisGamer?.userName || "not selected" }}: {{state.game.thisGamer?.figure}}</div>
-        <div>Opponent: {{state.game.opponentGamer?.userName || "not selected"}}: {{state.game.opponentGamer?.figure}}</div>
+        <div>This gamer: {{state.game.thisGamer?.userName || " not selected" }}: {{state.game.thisGamer?.figure}}</div>
+        <div>Opponent: {{state.game.opponentGamer?.userName || " not selected"}}: {{state.game.opponentGamer?.figure}}</div>
     </div>
 
     <div class="renju-grid">
@@ -18,11 +19,10 @@
         <div class="tile"
         *ngFor="let tile of row; index as columnIndex"
         [ngStyle]="{ 'grid-row': rowIndex + 1 }"
-        [ngClass]="{ isWinning: tile.isWinning === 1 }"
-        [ngClass]="{ isLoser: tile.isWinning === -1 }"
+        [ngClass]="{ isWinner: tile.isWinning === 1, isLoser: tile.isWinning === -1 }"
           (click)="clickTile(rowIndex, columnIndex)"
         >
-          {{ tile.value }}
+        {{ tile.value }}
         </div>
       </ng-container>
     </div>

@@ -28,7 +28,7 @@ export class ChildCommentComponent implements OnInit {
   }
   addChildComment() {
     this.isAddCommentActive = true;
-    if (!this.authService.loggedIn()) {
+    if (!this.authService.loggedIn) {
       localStorage.setItem('actualPageUrl', this.router.url);
       this.authService.login(
         'Only regisered users can leave comments. Please sign-in..'

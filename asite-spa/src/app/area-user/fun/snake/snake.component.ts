@@ -69,7 +69,7 @@ export class SnakeComponent implements OnInit {
   }
 
   setupGamer() {
-    if (this.authService.loggedIn()) {
+    if (this.authService.loggedIn) {
       const user = this.authService.currentUser;
       this.currentGamer = {
         id: user.id,
@@ -82,7 +82,7 @@ export class SnakeComponent implements OnInit {
   setupTopGamersScore() {
     this.gamersService.getTopGamers().subscribe((res) => {
       this.gamers = res;
-      if (this.authService.loggedIn()) {
+      if (this.authService.loggedIn) {
         const index = this.gamers.findIndex(
           (g) => g.id === this.currentGamer.id
         );

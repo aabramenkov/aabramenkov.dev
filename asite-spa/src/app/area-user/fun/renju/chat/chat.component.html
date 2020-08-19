@@ -4,5 +4,7 @@
       {{ message.from }}: {{ message.text }}
   </div>
 </div>
+<div class="msgBox">
 <textarea matInput #msgText class="inputMsgBox"></textarea>
-<button mat-mini-fab (click)="sendMessage(msgText.value)">Send</button>
+<button mat-mini-fab class="buttonSendMessage" (click)="sendMessage(msgText.value)">Send</button>
+</div>

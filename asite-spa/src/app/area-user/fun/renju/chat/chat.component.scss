@@ -1,32 +1,40 @@
 .chatBox {
-width: 300px;
-height: 500px;
-border: solid;
-border-color: rgb(224, 224, 224);
-border-width: thin;
+  width: 100%;
+  height: 500px;
+  border: solid;
+  border-color: rgb(224, 224, 224);
+  border-width: thin;
 }
 
-.inputMsgBox{
-vertical-align: top;
-border-color: rgb(224, 224, 224);
-width: 265px;
+.msg {
+  margin: 2px;
+  width: 50%;
+  border-radius: 5px;
+  padding: 5px;
+}
+.msgFrom {
+  background-color: rgb(221, 221, 221);
+}
+.msgTo {
+  margin-left: auto;
+  margin-right: 5px;
+  background-color: #74a0ff;
+  color: #fff;
+}
+.inputMsgBox {
+  vertical-align: top;
+  border-color: rgb(224, 224, 224);
+  border-radius: 15px;
+  width: 100%;
+  height: 50px;
+}
+.msgBox {
+  position: relative;
 }
 
-.msg{
-    margin:2px;
-    width: 50%;
-    border-radius: 5px;
-    padding: 5px;
-
-}
-.msgFrom{
-    background-color: rgb(221, 221, 221);
-
-}
-.msgTo{
-    margin-left:auto; 
-    margin-right:5px;
-    background-color: #77A7FF;;
-    color: #fff;
-
+.buttonSendMessage {
+  position: absolute;
+  right: 5px;
+  top: 6px;
+  opacity: 0.8;
 }

@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit {
   }
 
   loggedIn(): boolean {
-    return this.authService.loggedIn();
+    return this.authService.loggedIn;
   }
   roleMatch(): boolean {
     let isMatch = false;

@@ -169,7 +169,7 @@ export class AuthService {
     this.decodedTokenBehavourSubject.next(decodedToken);
   }
 
-  loggedIn(): boolean {
+  public get loggedIn(): boolean {
     const token = localStorage.getItem('token');
     return !this.jwtHelper.isTokenExpired(token);
   }

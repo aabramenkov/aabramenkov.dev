@@ -50,12 +50,9 @@ export class RenjuComponent implements OnInit {
     this.setupGameRender();
   }
 
-  runWebsocketConnection() {
-    // this.signalrService.startConnection();
-    this.signalrService.addMoveListener();
-    this.setupGame();
-    this.running.next(true);
-  }
+public get isConnected(): boolean{
+  return this.signalrService.isConnected;
+}
 
   setupGame() {
     const move$ = this.signalrService.moveSubject.pipe(
@@ -102,9 +99,9 @@ export class RenjuComponent implements OnInit {
   }
 
   clickTile(i: number, j: number) {
-    this.alertService.showMessage('clicked', '');
+
     if (!this.state.game.opponentGamer) {
-      alert('invate opponent');
+      this.alertService.showMessage('Invate opponent');
       return;
     }
     if (
@@ -120,27 +117,12 @@ export class RenjuComponent implements OnInit {
       ...this.state.game.grid[i][j],
       value: this.state.game.thisGamer.figure,
     };
+
     this.reducersService.sendMoveReducer(this.state, tile);
   }
 
-  inviteOpponent() {
-    if (!this.authService.loggedIn()) {
-      this.authService.login(
-        'Please register if you want to play game',
-        this.router.url
-      );
-      return;
-    }
-    if (!this.signalrService.connectionState()) {
-      this.signalrService.startConnection().then(() => {
-        this.getActiveUsers();
-      });
-      return;
-    }
-    this.getActiveUsers();
-  }
 
-  getActiveUsers() {
+  inviteOpponent() {
     this.httpService
       .activeGamers()
       .pipe(
@@ -149,17 +131,19 @@ export class RenjuComponent implements OnInit {
           const index = activeGamers.indexOf(
             this.authService.currentUser.userName
           );
-          activeGamers[index] = activeGamers[index] + ' (this gamer)';
+          activeGamers.splice(index, 1);
           return activeGamers;
         }),
         switchMap((acitveGamers) => {
           const dialogRef = this.dialog.open(InviteGamerDialogComponent, {
-             data: { activeGamers: acitveGamers }
+            data: { activeGamers: acitveGamers },
           });
           return dialogRef.afterClosed();
         })
       )
-      .subscribe(gamer => this.inviteGamer(gamer));
+      .subscribe((gamer) => {
+        this.inviteGamer(gamer);
+      });
   }
 
   inviteGamer(gamer: string) {
@@ -174,6 +158,23 @@ export class RenjuComponent implements OnInit {
   }
 
   handleResetClick() {
-    this.state.game.gameOver = false;
+    this.store.reset();
+  }
+
+  registerInGame(){
+    if (!this.authService.loggedIn) {
+      this.authService.login(
+        'Please register if you want to play game',
+        this.router.url
+      );
+      return;
+    }
+    if (!this.signalrService.isConnected) {
+      this.signalrService.startConnection();
+      this.signalrService.addMoveListener();
+      this.setupGame();
+      this.running.next(true);
+      return;
+    }
   }
 }

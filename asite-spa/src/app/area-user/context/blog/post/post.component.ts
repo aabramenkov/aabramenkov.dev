@@ -41,7 +41,7 @@ export class PostComponent implements OnInit {
   }
 
   addCommentToPost(id: number) {
-    if (!this.authService.loggedIn()) {
+    if (!this.authService.loggedIn) {
       localStorage.setItem('actualPageUrl', this.router.url);
       this.authService.login('Only regisered users can leave comments. Please sign-in..');
       return;

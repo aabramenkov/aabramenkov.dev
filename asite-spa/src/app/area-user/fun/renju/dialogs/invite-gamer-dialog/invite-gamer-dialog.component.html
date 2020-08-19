@@ -1,5 +1,11 @@
-<p>invite-gamer-dialog works!</p>
-<div *ngFor="let gamer of activeGamers">
-    {{gamer}}
-    <button mat-raised-button (click)="inviteGamer(gamer)">Invite</button>
-</div>
+<table *ngIf="activeGamers.length>0">
+  <tbody>
+    <tr *ngFor="let gamer of activeGamers">
+      <td>{{ gamer }}</td>
+      <td>
+        <button mat-raised-button (click)="inviteGamer(gamer)">Invite</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="activeGamers.length===0"> No Active gamers. LOL</div>

@@ -6,22 +6,24 @@ import { MatDialog } from '@angular/material/dialog';
 import { AcceptGameInvitationDialogComponent } from '../dialogs/accept-game-invitation-dialog/accept-game-invitation-dialog.component';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { AlertService } from './alert.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReducersService {
-  constructor(private signalrService: SignalrService, public dialog: MatDialog) {}
+  constructor(private signalrService: SignalrService, public dialog: MatDialog, private alertService: AlertService) {}
 
   inviteReducer(state: GameState, invitation: Invitation): Observable<GameState> {
+      const game = {...state.game};
       switch (invitation.status) {
         case 'invite': {
-          state.game.thisGamer = {
+          game.thisGamer = {
             id: 2,
             userName: invitation.to,
             figure: 'O',
           };
-          state.game.opponentGamer = {
+          game.opponentGamer = {
             id: 1,
             userName: invitation.from,
             figure: 'X',
@@ -33,34 +35,36 @@ export class ReducersService {
             status: 'accepted',
           };
           return this.openDialog(invitation.from).pipe(switchMap((result) => {
-            state.invitation = inviteResponse;
-            state.invitation.status = result ? 'accepted' : 'rejected';
-            state.game.gameStarted = result;
-            this.signalrService.sendInvitation(state.invitation);
-            return of(state);
+            inviteResponse.status = result ? 'accepted' : 'rejected';
+            game.gameStarted = result;
+            this.signalrService.sendInvitation(inviteResponse);
+            const newState = {...state, game, invitation: inviteResponse};
+            return of(newState);
           }));
           break;
         }
         case 'accepted': {
-          state.game.thisGamer = {
+          game.thisGamer = {
             id: 1,
             userName: invitation.to,
             figure: 'X',
           };
-          state.game.opponentGamer = {
+          game.opponentGamer = {
             id: 2,
             userName: invitation.from,
             figure: 'O',
           };
-          state.game.gameStarted = true;
-          alert('user accepted your invitation');
-          return of(state);
+          game.gameStarted = true;
+          this.alertService.showMessage (invitation.from + ' accepted your invitation. Lets game!');
+          const newState = {...state, game};
+          return of(newState);
           break;
         }
         case 'rejected': {
-          state.game.gameStarted = false;
-          alert('user rejected your game invitation!');
-          return of(state);
+          game.gameStarted = false;
+          this.alertService.showMessage (invitation.from + ' declained your invitation. LOL');
+          const newState = {...state, newGame: game};
+          return of(newState);
           break;
         }
       }
@@ -81,14 +85,22 @@ export class ReducersService {
   }
 
   getMoveReducer(state: GameState, move: Move): Observable<GameState> {
-    let game = state.game;
 
-    game.grid[move.i][move.j].value = move.value;
+    const grid: Tile[][] = [];
+    for (let i = 0; i < GAME_HEIGHT; i++) {
+      grid[i] = [];
+      for (let j = 0; j < GAME_WIDTH; j++) {
+        grid[i][j] = { i, j, value: state.game.grid[i][j].value, isWinning: state.game.grid[i][j].isWinning };
+      }
+    }
 
+    grid[move.i][move.j].value = move.value;
+    let game = {...state.game, grid};
     game = this.updGameIfGameOver(game, move);
     game.lastMove = move;
 
     const newState = { ...state, game };
+    console.log(state);
     return of(newState);
   }
 
@@ -96,12 +108,10 @@ export class ReducersService {
     const tile = game.grid[move.i][move.j];
     const tiles = this.getBiggestSolidLine(game, tile);
     if (tiles.size >= 5) {
-      const newGame = game;
       tiles.forEach((tl) => {
-        newGame.grid[tl.i][tl.j].isWinning = game.thisGamer.userName === move.from ? 1 : -1;
+        game.grid[tl.i][tl.j].isWinning = game.thisGamer.userName === move.from ? 1 : -1;
       });
-      newGame.gameOver = true;
-      return newGame;
+      game.gameOver = true;
     }
     return game;
   }

@@ -9,7 +9,7 @@ export class AlertService {
   // tslint:disable-next-line: variable-name
   constructor(private _snackBar: MatSnackBar) { }
 
-  showMessage(message: string, action: string) {
+  showMessage(message: string) {
     this._snackBar.open(message, '', {
       duration: 2000,
       verticalPosition: 'top',
