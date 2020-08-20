@@ -12,8 +12,6 @@ import {
   fromEvent,
   interval,
   merge,
-  Observable,
-  EMPTY,
 } from 'rxjs';
 import { StoreService } from './store.service';
 import {
@@ -22,7 +20,6 @@ import {
   filter,
   takeUntil,
   switchMap,
-  concatMap,
 } from 'rxjs/operators';
 import { directionReducer, tickReducer } from './snake';
 import { AuthService } from 'src/app/_services/auth.service';
@@ -40,12 +37,11 @@ const TICK_INTERVAL = 150;
 export class SnakeComponent implements OnInit {
   @HostBinding('class.game-container') gameContainerClass = true;
 
-  public state: GameState;
+  public state!: GameState;
   private running = new BehaviorSubject<boolean>(false);
   private unsubscribe$ = new Subject();
   public gamers: Gamer[] = [];
-  private currentGamer: Gamer;
-  private tickTest$ = interval(TICK_INTERVAL);
+  private currentGamer!: Gamer;
 
   public get grid(): Tile[][] {
     return this.state.game.map.grid;
@@ -72,9 +68,9 @@ export class SnakeComponent implements OnInit {
     if (this.authService.loggedIn) {
       const user = this.authService.currentUser;
       this.currentGamer = {
-        id: user.id,
-        userName: user.userName,
-        snakeScore: user.snakeScore,
+        id: user?.id ?? 0,
+        userName: user?.userName ?? '',
+        snakeScore: user?.snakeScore ?? 0,
       };
     }
   }
@@ -97,10 +93,9 @@ export class SnakeComponent implements OnInit {
   }
 
   setupGame() {
-    const direction$ = fromEvent(document, 'keydown').pipe(
-      distinctUntilChanged(
-        (a, b) => a === b,
-        (x: KeyboardEvent) => x.code
+    const direction$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
+      distinctUntilChanged((a, b) =>
+        a === b, (x: KeyboardEvent) => x.code
       ),
       tap((event: KeyboardEvent) =>
         this.store.reduce((state) => directionReducer(state, event))
@@ -134,6 +129,9 @@ export class SnakeComponent implements OnInit {
 
   private updateCurrentGamerScore() {
     const gamer = this.gamers.find((g) => g.id === this.currentGamer.id);
+    if (!gamer){
+      return;
+    }
     if (gamer.snakeScore < this.state.game.snake.length - 3) {
       gamer.snakeScore = this.state.game.snake.length - 3;
       this.gamers.sort((a, b) => b.snakeScore - a.snakeScore);

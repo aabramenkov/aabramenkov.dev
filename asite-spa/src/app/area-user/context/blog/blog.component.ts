@@ -10,7 +10,7 @@ import { GraphqlService } from './_services/graphql.service';
 })
 export class BlogComponent implements OnInit {
   loading = true;
-  posts: Post[];
+  posts: Post[] = [];
 
   constructor(
     private router: Router,

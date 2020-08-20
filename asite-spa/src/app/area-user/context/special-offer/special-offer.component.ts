@@ -13,6 +13,7 @@ import {faPen} from '@fortawesome/free-solid-svg-icons';
 export class SpecialOfferComponent implements OnInit {
   faPen = faPen;
   article: Article = {
+    id: 0,
     name: '',
     category: '',
     text: 'page loading',

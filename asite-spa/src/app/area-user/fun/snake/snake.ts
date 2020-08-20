@@ -56,9 +56,12 @@ function validNextDirection(curr: Direction, next: Direction): boolean {
         result = next !== Direction.Left;
         break;
       }
+      default: {
+        result = false;
+      }
     }
-    return result;
   }
+  return result;
 }
 
 function getNewHead(snake: Snake): SnakePart {
@@ -80,6 +83,9 @@ function getNewHead(snake: Snake): SnakePart {
     case Direction.Right: {
       newHead = { i: head.i, j: head.j + 1 };
       break;
+    }
+    default: {
+      return head;
     }
   }
   return newHead;
@@ -121,9 +127,16 @@ function snakeFoodEaten(snake: Snake, food: Food): Snake {
 }
 
 function isGameOver(game: Game): boolean {
-    const { snake, snake: { head } } = game;
-    return !isInBorders(head.i, head.j) ||
-      snake.parts.some(part => part !== head && part.i === head.i && part.j === head.j);
+  const {
+    snake,
+    snake: { head },
+  } = game;
+  return (
+    !isInBorders(head.i, head.j) ||
+    snake.parts.some(
+      (part) => part !== head && part.i === head.i && part.j === head.j
+    )
+  );
 }
 
 function tick(game: Game, direction: Direction): Game {
@@ -142,9 +155,8 @@ export function tickReducer(state: GameState): GameState {
   if (nextDirection !== undefined) {
     direction = nextDirection;
   }
-  const directions = state.directions.length === 1
-    ? state.directions
-    : [nextDirection, ...rest];
+  const directions =
+    state.directions.length === 1 ? state.directions : [nextDirection, ...rest];
   const game = tick(state.game, direction);
   return {
     ...state,
@@ -180,7 +192,10 @@ function getDirection(event: KeyboardEvent): Direction {
   return newDirection;
 }
 
-export function directionReducer(state: GameState, event: KeyboardEvent): GameState {
+export function directionReducer(
+  state: GameState,
+  event: KeyboardEvent
+): GameState {
   let result = state;
   const newDirection = getDirection(event);
   if (newDirection !== Direction.None) {
@@ -200,9 +215,15 @@ export function renderConsole(state: GameState) {
       .map((row) =>
         row
           .map((item) =>
-            item.isSnakeHead ? '@' : item.isSnake ? 'x' : item.isFood ? '*' : '.',
+            item.isSnakeHead
+              ? '@'
+              : item.isSnake
+              ? 'x'
+              : item.isFood
+              ? '*'
+              : '.'
           )
-          .join(' '),
+          .join(' ')
       )
       .join('\n');
     console.log(strGrid + '\n');

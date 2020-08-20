@@ -13,15 +13,15 @@ import { BlogService } from '../../_services/blog.service';
 })
 export class PostComponent implements OnInit {
   editor: any;
-  post: Post;
+  isLoadInProgress: boolean = false;
+  post!: Post;
   baseUrl = environment.apiUrl;
-  isLoadInProgress: boolean;
   showInEditorToggle = 'text';
-  tinyMceEditorModel: string;
+  tinyMceEditorModel: string | undefined;
   checked = true;
 
   editorConfig: any = {
-    setup: (editor) => {
+    setup: (editor: any) => {
       this.editor = editor;
       editor.ui.registry.addButton('addImage', {
         text: 'Add Image',
@@ -56,12 +56,20 @@ export class PostComponent implements OnInit {
     this.route.data.subscribe((data: any) => {
       this.post = data.post;
     });
-    this.tinyMceEditorModel = this.post.text;
+    this.tinyMceEditorModel = this.post?.text ?? '';
   }
   tinyMceInsertPhotoUrl(editor: any) {
-    document.getElementById('selectFile').click();
+    const element = document.getElementById('selectFile');
+    if (!element){
+      return;
+    }
+    element.click();
   }
+
   OnSubmit() {
+    if (!this.post){
+      return;
+    }
     this.post.url = this.slugify(this.post.title);
 
     if (this.post.id === 0) {
@@ -95,6 +103,9 @@ export class PostComponent implements OnInit {
     );
   }
   onCancel() {
+    if (!this.post){
+      return;
+    }
     this.blogService.getPost(this.post.id).subscribe(
       (p) => {
         this.post = p;
@@ -155,7 +166,7 @@ export class PostComponent implements OnInit {
     );
   }
 
-  private isImage(filename) {
+  private isImage(filename: string) {
     const ext = this.getExtension(filename);
     switch (ext.toLowerCase()) {
       case 'jpg':
@@ -168,7 +179,7 @@ export class PostComponent implements OnInit {
     return false;
   }
 
-  private getExtension(filename) {
+  private getExtension(filename: string) {
     const parts = filename.split('.');
     return parts[parts.length - 1];
   }
@@ -177,13 +188,16 @@ export class PostComponent implements OnInit {
     this.showInEditorToggle = value;
 
     if (this.showInEditorToggle === 'text') {
-      this.tinyMceEditorModel = this.post.text;
+      this.tinyMceEditorModel = this.post?.text ?? '';
     } else {
-      this.tinyMceEditorModel = this.post.description;
+      this.tinyMceEditorModel = this.post?.description ?? '';
     }
   }
 
-  tinyMceEditorModelOnChange(newValue) {
+  tinyMceEditorModelOnChange(newValue: string) {
+    if (!this.post){
+      return;
+    }
     if (this.showInEditorToggle === 'text') {
       this.post.text = newValue;
     } else {
@@ -192,6 +206,10 @@ export class PostComponent implements OnInit {
   }
 
   postPublishedChange(value: boolean) {
+    if (!this.post){
+      return;
+    }
+
     this.post.published = value;
   }
 

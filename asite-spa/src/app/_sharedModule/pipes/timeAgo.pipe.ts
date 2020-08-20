@@ -11,7 +11,7 @@ import {
   pure: false,
 })
 export class TimeAgoPipe implements PipeTransform, OnDestroy {
-  private timer: number;
+  private timer: number | null = null;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private ngZone: NgZone

@@ -16,6 +16,5 @@ export interface Post {
   userId: number;
   postCategory?: PostCategory;
   url: string;
-  comments?: Comment[];
-
+  comments: Comment[];
 }

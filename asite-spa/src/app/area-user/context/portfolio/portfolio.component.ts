@@ -14,7 +14,7 @@ import {faPen} from '@fortawesome/free-solid-svg-icons';
 })
 export class PortfolioComponent implements OnInit {
   faPen = faPen;
-  portfolioArticles: Article[];
+  portfolioArticles: Article[] = [];
 
   constructor(
     public dialog: MatDialog,

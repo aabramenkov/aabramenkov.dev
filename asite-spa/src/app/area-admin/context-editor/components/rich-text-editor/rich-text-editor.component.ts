@@ -13,14 +13,14 @@ import { PhotoService } from 'src/app/area-admin/_services/photo.service';
 })
 export class RichTextEditorComponent implements OnInit {
   editor: any;
-  article: Article;
   baseUrl = environment.apiUrl;
-  isLoadInProgress: boolean;
+  isLoadInProgress: boolean = false;
+  article!: Article;
+  tinyMceEditorModel: string | undefined;
   showInEditorToggle = 'text';
-  tinyMceEditorModel: string;
 
   editorConfig: any = {
-    setup: (editor) => {
+    setup: (editor: any) => {
       this.editor = editor;
       editor.ui.registry.addButton('addImage', {
         text: 'Add Image',
@@ -54,14 +54,24 @@ export class RichTextEditorComponent implements OnInit {
   ngOnInit() {
     this.rout.data.subscribe((data) => {
       this.article = data.article;
-      this.tinyMceEditorModel = this.article.text;
+      if (this.article) {
+        this.tinyMceEditorModel = this.article.text;
+      }else{
+        this.tinyMceEditorModel = '';
+      }
     });
   }
   tinyMceInsertPhotoUrl(editor: any) {
-    document.getElementById('selectFile').click();
+    const element = document.getElementById('selectFile');
+    if (element) {
+      element.click();
+    }
   }
 
   OnSubmit() {
+    if (!this.article?.id){
+      return;
+    }
     this.contextService.updateArticle(this.article.id, this.article).subscribe(
       (next) => {
         this.snackBar.open('Article sucesfully saved', 'Julia Site', {
@@ -78,6 +88,9 @@ export class RichTextEditorComponent implements OnInit {
     );
   }
   OnCancel() {
+    if (!this.article?.id){
+      return;
+    }
     this.contextService.getArticle(this.article.id).subscribe((a) => {
       this.article = a;
     });
@@ -133,7 +146,7 @@ export class RichTextEditorComponent implements OnInit {
     );
   }
 
-  private isImage(filename) {
+  private isImage(filename: string) {
     const ext = this.getExtension(filename);
     switch (ext.toLowerCase()) {
       case 'jpg':
@@ -146,7 +159,7 @@ export class RichTextEditorComponent implements OnInit {
     return false;
   }
 
-  private getExtension(filename) {
+  private getExtension(filename: string) {
     const parts = filename.split('.');
     return parts[parts.length - 1];
   }
@@ -155,13 +168,16 @@ export class RichTextEditorComponent implements OnInit {
     this.showInEditorToggle = value;
 
     if (this.showInEditorToggle === 'text') {
-      this.tinyMceEditorModel = this.article.text;
+      this.tinyMceEditorModel = this.article?.text ?? '';
     } else {
-      this.tinyMceEditorModel = this.article.shortDescription;
+      this.tinyMceEditorModel = this.article?.shortDescription ?? '';
     }
   }
 
-  tinyMceEditorModelOnChange(newValue) {
+  tinyMceEditorModelOnChange(newValue: string) {
+    if (!this.article?.text){
+      return;
+    }
     if (this.showInEditorToggle === 'text') {
       this.article.text = newValue;
     } else {

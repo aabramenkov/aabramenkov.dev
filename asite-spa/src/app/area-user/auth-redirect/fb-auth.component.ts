@@ -16,7 +16,11 @@ export class FbAuthComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const fbAuthCode = this.route.snapshot.queryParamMap.get('code');
+    const fbAuthCode: string|null = this.route.snapshot.queryParamMap.get('code');
+    if (!fbAuthCode){
+      console.error ('Authorization failed');
+      return;
+    }
     this.authService.fbAuth(fbAuthCode).subscribe(
       () => {
         const actualPageUrl = localStorage.getItem('actualPageUrl');

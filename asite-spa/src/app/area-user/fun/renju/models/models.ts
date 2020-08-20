@@ -3,6 +3,7 @@ import { Data } from '@angular/router';
 export interface GameState {
   game: Game;
   invitation?: Invitation;
+  chatMessages?: Message[];
 }
 
 export interface Tile {
@@ -32,6 +33,7 @@ export interface Gamer {
   id: number;
   userName: string;
   figure?: string;
+  photoUrl?: string;
 }
 
 export interface Invitation {

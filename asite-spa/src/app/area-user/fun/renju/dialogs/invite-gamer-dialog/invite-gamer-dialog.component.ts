@@ -10,7 +10,7 @@ import { Gamer } from '../../models/models';
   styleUrls: ['./invite-gamer-dialog.component.scss']
 })
 export class InviteGamerDialogComponent implements OnInit {
-  public activeGamers: Gamer[];
+  public activeGamers: Gamer[] = [];
   constructor(public dialogRef: MatDialogRef<InviteGamerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {

@@ -7,15 +7,21 @@
 
 .renju-grid-container {
     position: relative;
-    align-items: flex-end;
+    align-items: center;
     display: flex;
     flex-direction: column;
 }
   
 .game-header-container {
   display: flex;
+  flex-direction: column;
+  margin: 5px 0 5px 0;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  .gameInformation{
+    margin: 5px 0 5px 0
+  }
 }
   
 .renju-grid {

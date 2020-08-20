@@ -1,6 +1,6 @@
 <p>Chat</p>
 <div class="chatBox">
-  <div *ngFor="let message of messages" class="msg" [ngClass]="{msgTo: message.from==='Alex', msgFrom: message.from!=='Alex'}">
+  <div *ngFor="let message of chatMessages" class="msg" [ngClass]="{msgTo: message.from!==thisUserName, msgFrom: message.from===thisUserName}">
       {{ message.from }}: {{ message.text }}
   </div>
 </div>

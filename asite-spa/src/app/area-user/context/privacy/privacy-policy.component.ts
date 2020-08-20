@@ -15,6 +15,7 @@ export class PrivacyPolicyComponent implements OnInit {
 
   article: Article = {
     name: '',
+    id: 0,
     category: '',
     text: 'fdsgf',
   };

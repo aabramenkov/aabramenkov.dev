@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { buildUrl } from 'build-url/src/build-url';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../_models/user.model';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { LoginDialogComponent } from '../area-user/login-dialog/login-dialog.component';
-import { Url } from 'url';
+import {URLBuilder} from '@wizpanda/url-builder';
 
 @Injectable({
   providedIn: 'root',
@@ -16,21 +15,18 @@ import { Url } from 'url';
 export class AuthService {
   decodedToken: any;
 
-  isloggedInTmp: boolean;
+  isloggedInTmp: boolean = false;
   jwtHelper = new JwtHelperService();
   baseUrl = environment.apiUrl;
 
   decodedTokenBehavourSubject = new BehaviorSubject<any>({});
   currentDecodedToken = this.decodedTokenBehavourSubject.asObservable();
 
-  currentUser: User;
+  currentUser: User | undefined;
   photoUrl = new BehaviorSubject<string>(' ../../assets/user.png');
   currentPhotoUrl = this.photoUrl.asObservable();
 
-  constructor(
-    private http: HttpClient,
-    public dialog: MatDialog,
-  ) {
+  constructor(private http: HttpClient, public dialog: MatDialog) {
     const tokenFromLocalStorage = localStorage.getItem('token');
     if (
       tokenFromLocalStorage &&
@@ -42,13 +38,15 @@ export class AuthService {
       const userFromLocalStorage = localStorage.getItem('user');
       if (userFromLocalStorage) {
         this.currentUser = JSON.parse(userFromLocalStorage);
-        this.changeMemberPhoto(this.currentUser.photoUrl);
+        if (this.currentUser) {
+          this.changeMemberPhoto(this.currentUser.photoUrl);
+        }
       }
     }
   }
 
   login(header: string, initialUrl?: string) {
-    if (initialUrl){
+    if (initialUrl) {
       localStorage.setItem('actualPageUrl', initialUrl);
     }
     const initialState = {
@@ -83,7 +81,7 @@ export class AuthService {
     localStorage.removeItem('user');
     localStorage.removeItem('actualPageUrl');
     this.decodedToken = null;
-    this.currentUser = null;
+    this.currentUser = undefined;
     this.changeDecodedToken(null);
   }
 
@@ -97,23 +95,34 @@ export class AuthService {
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
           this.currentUser = user.user;
           this.changeDecodedToken(this.decodedToken);
-          this.changeMemberPhoto(this.currentUser.photoUrl);
+          if (this.currentUser) {
+            this.changeMemberPhoto(this.currentUser.photoUrl);
+          }
         }
       })
     );
   }
 
   private fbLogin() {
-    const url = buildUrl(environment.fbAuthUrl, {
-      path: 'oauth',
-      queryParams: {
-        client_id: environment.fbClientId,
-        redirect_uri: environment.fbRedirectUrl,
-        scope: 'email',
-        state: 'state123',
-      },
-    });
-    window.location.href = url;
+    const urlBuilder = new URLBuilder(environment.fbAuthUrl);
+    urlBuilder.setPath('oauth');
+    urlBuilder.setQueryParam('client_id', environment.fbClientId);
+    urlBuilder.appendQueryParam('redirect_uri', environment.fbRedirectUrl);
+    urlBuilder.appendQueryParam('scope', 'email');
+    urlBuilder.appendQueryParam('state', 'state123');
+    window.location.href = urlBuilder.toString();
+
+
+// from old urlBuilder
+    // const url = buildUrl(environment.fbAuthUrl, {
+    //   path: 'oauth',
+    //   queryParams: {
+    //     client_id: environment.fbClientId,
+    //     redirect_uri: environment.fbRedirectUrl,
+    //     scope: 'email',
+    //     state: 'state123',
+    //   },
+    // });
   }
 
   fbAuth(fbAuthCode: string): Observable<any> {
@@ -126,23 +135,32 @@ export class AuthService {
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
           this.currentUser = user.user;
           this.changeDecodedToken(this.decodedToken);
-          this.changeMemberPhoto(this.currentUser.photoUrl);
+          if (this.currentUser) {
+            this.changeMemberPhoto(this.currentUser.photoUrl);
+          }
         }
       })
     );
   }
 
   private linkedinLogin() {
-    const url = buildUrl(environment.linkedinAuthUrl, {
-      queryParams: {
-        response_type: 'code',
-        client_id: environment.linkedinClientId,
-        redirect_uri: environment.linkedinRedirectUrl,
-        scope: 'r_emailaddress r_liteprofile',
-        state: 'state123',
-      },
-    });
-    window.location.href = url;
+    const urlBuilder = new URLBuilder(environment.linkedinAuthUrl);
+    urlBuilder.setQueryParam('response_type', 'code');
+    urlBuilder.appendQueryParam('client_id', environment.linkedinClientId);
+    urlBuilder.appendQueryParam('redirect_uri', environment.linkedinRedirectUrl);
+    urlBuilder.appendQueryParam('scope', 'r_emailaddress r_liteprofile');
+    urlBuilder.appendQueryParam('state', 'state123');
+    window.location.href = urlBuilder.toString();
+
+    // const url = buildUrl(environment.linkedinAuthUrl, {
+    //   queryParams: {
+    //     response_type: 'code',
+    //     client_id: environment.linkedinClientId,
+    //     redirect_uri: environment.linkedinRedirectUrl,
+    //     scope: 'r_emailaddress r_liteprofile',
+    //     state: 'state123',
+    //   },
+    // });
   }
   linkedinAuth(linkedinAuthCode: string): Observable<any> {
     return this.http
@@ -156,7 +174,9 @@ export class AuthService {
             this.decodedToken = this.jwtHelper.decodeToken(user.token);
             this.currentUser = user.user;
             this.changeDecodedToken(this.decodedToken);
-            this.changeMemberPhoto(this.currentUser.photoUrl);
+            if (this.currentUser) {
+              this.changeMemberPhoto(this.currentUser.photoUrl);
+            }
           }
         })
       );
@@ -170,11 +190,11 @@ export class AuthService {
   }
 
   public get loggedIn(): boolean {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || '{}';
     return !this.jwtHelper.isTokenExpired(token);
   }
 
-  roleMatch(allowedRoles): boolean {
+  roleMatch(allowedRoles: string[]): boolean {
     let isMatch = false;
     if (!this.decodedToken) {
       return isMatch;

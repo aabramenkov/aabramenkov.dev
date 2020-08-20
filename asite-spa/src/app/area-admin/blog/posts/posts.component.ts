@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./posts.component.scss'],
 })
 export class PostsComponent implements OnInit {
-  posts: Post[];
+  posts: Post[] | undefined;
   displayedColumns: string[] = [
     'published',
     'title',

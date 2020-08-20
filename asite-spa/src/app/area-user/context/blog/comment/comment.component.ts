@@ -15,10 +15,10 @@ import { EmailService } from 'src/app/_services/email.service';
   styleUrls: ['./comment.component.scss'],
 })
 export class CommentComponent implements OnInit {
-  @Input() comment: Comment;
+  @Input() comment!: Comment;
   @Output() commentDeleted = new EventEmitter<Comment>();
 
-  user: User;
+  user: User | undefined;
   public isAddCommentActive = false;
 
   constructor(
@@ -47,6 +47,9 @@ export class CommentComponent implements OnInit {
     this.isAddCommentActive = false;
   }
   publishChildComment(commentText: string) {
+    if (!this.user) {
+      return;
+    }
     if (!commentText) {
       this.isAddCommentActive = false;
       return;
@@ -66,8 +69,10 @@ export class CommentComponent implements OnInit {
       message:
         'A new comment was added. <br>' +
         'Link: aabramenkov.dev' +
-        this.router.url + '<br>' +
-        'Text: ' + commentText,
+        this.router.url +
+        '<br>' +
+        'Text: ' +
+        commentText,
     };
     this.emailService.sendEmail(email).subscribe();
 
@@ -81,8 +86,10 @@ export class CommentComponent implements OnInit {
       message:
         'A new comment was added. <br>' +
         'Link: aabramenkov.dev' +
-        this.router.url + '<br>' +
-        'Text: ' + childComment.text,
+        this.router.url +
+        '<br>' +
+        'Text: ' +
+        childComment.text,
     };
     this.emailService.sendEmail(email).subscribe();
   }

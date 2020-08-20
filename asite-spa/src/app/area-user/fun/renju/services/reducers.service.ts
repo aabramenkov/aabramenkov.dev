@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { SignalrService } from './signalr.service';
-import { GameState, Move, Game, Tile, Invitation } from '../models/models';
+import { GameState, Move, Game, Tile, Invitation, Message } from '../models/models';
 import { GAME_HEIGHT, GAME_WIDTH } from '../renju';
 import { MatDialog } from '@angular/material/dialog';
 import { AcceptGameInvitationDialogComponent } from '../dialogs/accept-game-invitation-dialog/accept-game-invitation-dialog.component';
-import { Observable, of } from 'rxjs';
+import { Observable, of, EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AlertService } from './alert.service';
 
@@ -67,20 +67,34 @@ export class ReducersService {
           return of(newState);
           break;
         }
+        default: {
+          return of(state);
+        }
       }
     }
 
 
   sendMoveReducer(state: GameState, tile: Tile): Observable<GameState> {
+    if (!state.game.thisGamer || state.game.opponentGamer?.userName){
+      return EMPTY;
+    }
     const move: Move = {
       from: state.game.thisGamer.userName,
-      to: state.game.opponentGamer.userName,
+      to: state.game.opponentGamer?.userName ?? '',
       i: tile.i,
       j: tile.j,
       value: tile.value,
     };
 
     this.signalrService.broadcastMove(move);
+    return of(state);
+  }
+
+  getMessageReducer(state: GameState, message: Message): Observable<GameState>{
+    if (!state.chatMessages){
+      state.chatMessages = [];
+    }
+    state.chatMessages.push(message);
     return of(state);
   }
 
@@ -100,16 +114,18 @@ export class ReducersService {
     game.lastMove = move;
 
     const newState = { ...state, game };
-    console.log(state);
     return of(newState);
   }
 
   private updGameIfGameOver(game: Game, move: Move): Game {
+    if (!game.thisGamer){
+      return game;
+    }
     const tile = game.grid[move.i][move.j];
     const tiles = this.getBiggestSolidLine(game, tile);
     if (tiles.size >= 5) {
       tiles.forEach((tl) => {
-        game.grid[tl.i][tl.j].isWinning = game.thisGamer.userName === move.from ? 1 : -1;
+        game.grid[tl.i][tl.j].isWinning = game.thisGamer?.userName === move.from ? 1 : -1;
       });
       game.gameOver = true;
     }

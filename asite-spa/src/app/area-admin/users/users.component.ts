@@ -19,7 +19,7 @@ export class UsersComponent implements OnInit {
     'roles',
     'action',
   ];
-  users: User[];
+  users: User[] | undefined;
   // dataSource: User[];
 
   constructor(private userService: AdminService, private dialog: MatDialog) {}
@@ -46,7 +46,9 @@ export class UsersComponent implements OnInit {
       if (roles) {
         const rolesToUpdate = {
           roleNames: [
-            ...roles.filter((rl) => rl.checked === true).map((rl) => rl.name),
+            ...roles.filter((rl: { checked: boolean; }) => rl.checked === true).map((rl: { name: any; }) => {
+              return rl.name;
+            }),
           ],
         };
         if (rolesToUpdate) {
@@ -65,7 +67,7 @@ export class UsersComponent implements OnInit {
 
   private getRolesArray(user: User) {
     const roles: any[] = [];
-    const userRoles: string[] = user.roles;
+    const userRoles: string[] = user.roles ?? [];
     const availableRoles: any[] = [
       { name: 'Admin', value: 'Admin' },
       { name: 'Moderator', value: 'Moderator' },

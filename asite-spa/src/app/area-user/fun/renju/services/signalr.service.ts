@@ -8,11 +8,11 @@ import { AuthService } from 'src/app/_services/auth.service';
   providedIn: 'root',
 })
 export class SignalrService {
-  private hubConnection: signalR.HubConnection;
+  private hubConnection!: signalR.HubConnection;
   public moveSubject: ReplaySubject<Move> = new ReplaySubject<Move>();
-  public activeGamers: string[];
+  public activeGamers: string[] = [];
 
-  constructor(private authService: AuthService) {}
+  constructor() {}
 
   public get isConnected(): boolean {
     if (this.hubConnection){
@@ -21,10 +21,10 @@ export class SignalrService {
     return false;
   }
 
-  public startConnection(): Promise<void> {
+  public startConnection(currentUserName: string): Promise<void> {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(
-        `http://localhost:5000/renju?username=${this.authService.currentUser.userName}`,
+        `http://localhost:5000/renju?username=${currentUserName}`,
         {
           skipNegotiation: true,
           transport: signalR.HttpTransportType.WebSockets,

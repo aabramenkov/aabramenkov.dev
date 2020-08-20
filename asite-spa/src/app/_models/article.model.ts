@@ -1,6 +1,6 @@
 
 export interface Article {
-  id?: number;
+  id: number;
   category: string;
   shortDescription?: string;
   name: string;

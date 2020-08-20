@@ -11,7 +11,7 @@ import { User } from 'src/app/_models/user.model';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-  userForm: FormGroup;
+  userForm!: FormGroup;
   user: User = {
     id: 0,
     userName: 'string',
@@ -30,6 +30,7 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.createUserForm();
     this.userservice
       .getUser(this.authService.decodedToken.nameid)
       .subscribe((data: User) => {
@@ -39,7 +40,6 @@ export class ProfileComponent implements OnInit {
           email: this.user.email,
         });
       });
-    this.createUserForm();
   }
 
   createUserForm() {

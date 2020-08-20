@@ -16,6 +16,10 @@ export class LinkedinAuthComponent implements OnInit {
 
   ngOnInit() {
     const linkedinAuthCode = this.route.snapshot.queryParamMap.get('code');
+    if (!linkedinAuthCode){
+      console.error('Error Linkedin Authorization!');
+      return;
+    }
     this.authService.linkedinAuth(linkedinAuthCode).subscribe(
       () => {
         const actualPageUrl = localStorage.getItem('actualPageUrl');

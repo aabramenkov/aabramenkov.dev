@@ -7,7 +7,7 @@ import { Apollo } from 'apollo-angular';
 
 @Injectable()
 export class GraphqlService {
-  posts: Post[];
+  posts: Post[] = [];
   constructor(private apollo: Apollo) {}
 
 getPosts(): Observable<any> {

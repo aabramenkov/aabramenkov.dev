@@ -12,7 +12,7 @@ import {faBars} from '@fortawesome/free-solid-svg-icons';
 export class HeaderComponent implements OnInit {
   @Output() public sidenavToggle = new EventEmitter();
   faBars = faBars;
-  photoUrl: string;
+  photoUrl: string = '../../../../../assets/user.png';
 
   constructor(
     public dialog: MatDialog,

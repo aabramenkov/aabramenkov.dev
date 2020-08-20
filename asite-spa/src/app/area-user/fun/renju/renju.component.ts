@@ -6,6 +6,7 @@ import {
   Move,
   Invitation,
   GameState,
+  Message,
 } from './models/models';
 import { SignalrService } from './services/signalr.service';
 import { HttpService } from './services/http.service';
@@ -18,6 +19,7 @@ import { AlertService } from './services/alert.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { InviteGamerDialogComponent } from './dialogs/invite-gamer-dialog/invite-gamer-dialog.component';
+import { defaultGameState } from './renju';
 
 @Component({
   selector: 'app-renju',
@@ -25,11 +27,11 @@ import { InviteGamerDialogComponent } from './dialogs/invite-gamer-dialog/invite
   styleUrls: ['./renju.component.scss'],
 })
 export class RenjuComponent implements OnInit {
-  public state: GameState;
+  public state: GameState = defaultGameState();
   private running = new BehaviorSubject<boolean>(false);
   private unsubscribe$ = new Subject();
 
-  public activeGamers: string[];
+  // public activeGamers: string[];
 
   public get grid(): Tile[][] {
     return this.state.game.grid;
@@ -50,11 +52,12 @@ export class RenjuComponent implements OnInit {
     this.setupGameRender();
   }
 
-public get isConnected(): boolean{
-  return this.signalrService.isConnected;
-}
+  public get isConnected(): boolean {
+    return this.signalrService.isConnected;
+  }
 
-  setupGame() {
+  private setupGame() {
+    this.state.game.thisGamer = this.authService.currentUser as Gamer;
     const move$ = this.signalrService.moveSubject.pipe(
       tap((move: Move) => {
         this.store.reduce((state) =>
@@ -71,11 +74,19 @@ public get isConnected(): boolean{
       })
     );
 
+    const message$ = this.signalrService.messageListener().pipe(
+      tap((message: Message) => {
+        this.store.reduce((state) =>
+          this.reducersService.getMessageReducer(state, message)
+        );
+      })
+    );
+
     const gameOver$ = this.store
       .select((state) => state.game.gameOver)
       .pipe(filter((gameOver) => gameOver));
 
-    const game$ = merge(invite$, move$);
+    const game$ = merge(invite$, move$, message$);
 
     this.running
       .pipe(
@@ -99,13 +110,12 @@ public get isConnected(): boolean{
   }
 
   clickTile(i: number, j: number) {
-
     if (!this.state.game.opponentGamer) {
       this.alertService.showMessage('Invate opponent');
       return;
     }
     if (
-      this.state.game.lastMove?.from === this.authService.currentUser.userName
+      this.state.game.lastMove?.from === this.authService.currentUser?.userName
     ) {
       alert('you should wait partners move');
       return;
@@ -113,14 +123,13 @@ public get isConnected(): boolean{
     if (this.state.game.grid[i][j].value !== '') {
       return;
     }
-    const tile = {
+    const tile: Tile = {
       ...this.state.game.grid[i][j],
-      value: this.state.game.thisGamer.figure,
+      value: this.state.game.thisGamer?.figure ?? 'X'
     };
 
     this.reducersService.sendMoveReducer(this.state, tile);
   }
-
 
   inviteOpponent() {
     this.httpService
@@ -129,7 +138,7 @@ public get isConnected(): boolean{
         map((data) => {
           const activeGamers = data;
           const index = activeGamers.indexOf(
-            this.authService.currentUser.userName
+            this.authService.currentUser?.userName ?? ''
           );
           activeGamers.splice(index, 1);
           return activeGamers;
@@ -147,6 +156,9 @@ public get isConnected(): boolean{
   }
 
   inviteGamer(gamer: string) {
+    if (!this.authService.currentUser){
+      return;
+    }
     const invitation: Invitation = {
       from: this.authService.currentUser.userName,
       to: gamer,
@@ -161,7 +173,7 @@ public get isConnected(): boolean{
     this.store.reset();
   }
 
-  registerInGame(){
+  registerInGame() {
     if (!this.authService.loggedIn) {
       this.authService.login(
         'Please register if you want to play game',
@@ -169,12 +181,26 @@ public get isConnected(): boolean{
       );
       return;
     }
+    if (!this.authService.currentUser){
+      return;
+    }
     if (!this.signalrService.isConnected) {
-      this.signalrService.startConnection();
+      this.signalrService.startConnection(this.authService.currentUser?.userName);
       this.signalrService.addMoveListener();
       this.setupGame();
       this.running.next(true);
       return;
     }
   }
+
+  sendMessage(msgText: string) {
+    const message: Message = {
+      from: this.state.game.thisGamer?.userName ?? '',
+      to: this.state.game.opponentGamer?.userName ?? '',
+      sent: new Date(),
+      text: msgText,
+    };
+    this.signalrService.sendMessage(message);
+  }
+
 }

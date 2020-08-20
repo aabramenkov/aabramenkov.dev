@@ -19,7 +19,12 @@ export class HeaderAdminComponent implements OnInit {
 
   ngOnInit() {
   }
+
   navigateToSite() {
+
+  if (!this.rout.snapshot.firstChild) {
+    return;
+  }
   const url = this.rout.snapshot.firstChild.url[0].path;
 
   switch (url) {

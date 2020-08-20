@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { SignalrService } from '../services/signalr.service';
 import { Message } from '../models/models';
 
@@ -8,53 +8,18 @@ import { Message } from '../models/models';
   styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnInit {
-  public messages: Message[]; // = [];
-  @Input() userNameFrom: string;
-  @Input() userNameTo: string;
-  @ViewChild('msgText') msgInput: ElementRef;
+  @Input() chatMessages: Message[] = [];
+  @Input() thisUserName!: string;
+  @Output() msgEvent = new EventEmitter<string>();
+  @ViewChild('msgText') msgInput!: ElementRef;
 
-  constructor(private signalrService: SignalrService) {}
+  constructor() {}
 
   ngOnInit(): void {
-    this.messages = [
-      {
-        from: 'Alex',
-        to: 'Julia',
-        sent: new Date(),
-        text: 'Hi',
-      },
-      {
-        from: 'Julia',
-        to: 'Alex',
-        sent: new Date(),
-        text: 'Hi',
-      },
-      {
-        from: 'Alex',
-        to: 'Julia',
-        sent: new Date(),
-        text: 'How are u?',
-      },
-      {
-        from: 'Julia',
-        to: 'Alex',
-        sent: new Date(),
-        text: 'thx, and you?',
-      },
-    ];
-    // this.signalrService.messageListener().subscribe((message: Message) => {
-    //   this.messages.push(message);
-    //   this.msgInput.nativeElement.value = '';
-    // });
   }
 
   sendMessage(msgText: string) {
-    const message: Message = {
-      from: this.userNameFrom,
-      to: this.userNameTo,
-      sent: new Date(),
-      text: msgText,
-    };
-    this.signalrService.sendMessage(message);
+    this.msgEvent.emit(msgText);
+    this.msgInput.nativeElement.value = '';
   }
 }

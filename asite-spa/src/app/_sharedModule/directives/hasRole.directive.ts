@@ -17,7 +17,7 @@ export class HasRoleDirective implements OnInit {
     private templateRef: TemplateRef<any>,
     private authService: AuthService
   ) {}
-  @Input() appHasRole: string;
+  @Input() appHasRole!: string[];
   isVisible = false;
 
   ngOnInit(): void {

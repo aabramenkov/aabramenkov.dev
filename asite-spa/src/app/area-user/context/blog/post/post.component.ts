@@ -9,8 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GraphqlService } from '../_services/graphql.service';
 import { EmailService } from 'src/app/_services/email.service';
 import { Email } from 'src/app/_models/email.model';
-import {faPen} from '@fortawesome/free-solid-svg-icons';
-
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-post',
@@ -19,9 +18,9 @@ import {faPen} from '@fortawesome/free-solid-svg-icons';
 })
 export class PostComponent implements OnInit {
   faPen = faPen;
-  post: Post;
+  post!: Post;
   loading = true;
-  user: User;
+  user: User | undefined;
 
   isAddCommentFieldActive = false;
 
@@ -43,7 +42,9 @@ export class PostComponent implements OnInit {
   addCommentToPost(id: number) {
     if (!this.authService.loggedIn) {
       localStorage.setItem('actualPageUrl', this.router.url);
-      this.authService.login('Only regisered users can leave comments. Please sign-in..');
+      this.authService.login(
+        'Only regisered users can leave comments. Please sign-in..'
+      );
       return;
     }
     this.isAddCommentFieldActive = true;
@@ -54,18 +55,26 @@ export class PostComponent implements OnInit {
   }
 
   addCommmentPublish(commentText: string) {
-    this.graphqlService.addComment(commentText, this.user.id, this.post.id).
-    subscribe((data) => {
+    if (!this.user || !this.post) {
+      return;
+    }
+    this.graphqlService
+      .addComment(commentText, this.user.id, this.post.id)
+      .subscribe((data) => {
         const comment: Comment = data;
-        this.post.comments.push(comment);
-    });
+        if (this.post) {
+          this.post.comments.push(comment);
+        }
+      });
     const email: Email = {
       email: '',
       message:
         'A new comment was added. <br>' +
         'Link: aabramenkov.dev' +
-        this.router.url + '<br>' +
-        'Text: ' + commentText,
+        this.router.url +
+        '<br>' +
+        'Text: ' +
+        commentText,
     };
     this.emailService.sendEmail(email).subscribe();
     this.isAddCommentFieldActive = false;
@@ -74,7 +83,11 @@ export class PostComponent implements OnInit {
   editPost(id: number) {
     this.router.navigate(['/admin/post'], { queryParams: { id } });
   }
-  onCommentDeleted(comment: Comment){
+
+  onCommentDeleted(comment: Comment) {
+    if (!this.post) {
+      return;
+    }
     const index = this.post.comments.indexOf(comment, 0);
     if (index > -1) {
       this.post.comments.splice(index, 1);

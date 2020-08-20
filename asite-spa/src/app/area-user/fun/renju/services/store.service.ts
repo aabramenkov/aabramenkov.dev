@@ -24,15 +24,12 @@ export class StoreService {
   }
 
   public reduce(reducer: (state: GameState) => Observable<GameState>) {
-    // const newState = reducer(this.state.value);
-    // this.state.next(newState);
     reducer(this.state.value).subscribe((newState: GameState) => {
       this.state.next(newState);
     });
   }
 
   public reset() {
-    console.log(DEFAULT_GAME_STATE);
     this.state.next(DEFAULT_GAME_STATE);
   }
 }

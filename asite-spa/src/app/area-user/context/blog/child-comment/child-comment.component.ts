@@ -11,11 +11,11 @@ import { GraphqlService } from '../_services/graphql.service';
   styleUrls: ['./child-comment.component.scss'],
 })
 export class ChildCommentComponent implements OnInit {
-  @Input() childComment: ChildComment;
+  @Input() childComment!: ChildComment;
   @Output() childCommentCreated = new EventEmitter<ChildComment>();
   @Output() childCommentDeleted = new EventEmitter<ChildComment>();
   public isAddCommentActive = false;
-  public user: User;
+  public user: User | undefined;
 
   constructor(
     private graphqlService: GraphqlService,
@@ -42,6 +42,9 @@ export class ChildCommentComponent implements OnInit {
   }
 
   publishChildComment(commentText: string) {
+    if (!this.user){
+      return;
+    }
     if (!commentText) {
       this.isAddCommentActive = false;
       return;

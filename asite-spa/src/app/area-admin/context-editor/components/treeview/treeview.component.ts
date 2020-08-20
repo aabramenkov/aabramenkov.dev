@@ -21,9 +21,9 @@ interface ArticleNode {
   styleUrls: ['./treeview.component.css'],
 })
 export class TreeviewComponent implements OnInit {
-  @Input() categories: Category[];
+  @Input() categories: Category[]|null = null;
   treeControl = new NestedTreeControl<CategoryNode>((node) => node.articles);
-  dataSource = new ArrayDataSource([]);
+  dataSource = new ArrayDataSource<Category>([]);
 
   hasChild = (_: number, node: CategoryNode) =>
     !!node.articles && node.articles.length > 0
@@ -31,7 +31,7 @@ export class TreeviewComponent implements OnInit {
   constructor(private contextService: ContextService, private router: Router) {}
 
   ngOnInit(): void {
-    this.contextService.getCategories().subscribe((resp) => {
+    this.contextService.getCategories().subscribe((resp: Category[]) => {
        this.dataSource = new ArrayDataSource(resp);
      });
   }
