@@ -7,7 +7,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../_models/user.model';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { LoginDialogComponent } from '../area-user/login-dialog/login-dialog.component';
-import {URLBuilder} from '@wizpanda/url-builder';
 
 @Injectable({
   providedIn: 'root',
@@ -104,25 +103,12 @@ export class AuthService {
   }
 
   private fbLogin() {
-    const urlBuilder = new URLBuilder(environment.fbAuthUrl);
-    urlBuilder.setPath('oauth');
-    urlBuilder.setQueryParam('client_id', environment.fbClientId);
-    urlBuilder.appendQueryParam('redirect_uri', environment.fbRedirectUrl);
-    urlBuilder.appendQueryParam('scope', 'email');
-    urlBuilder.appendQueryParam('state', 'state123');
-    window.location.href = urlBuilder.toString();
+    let authUrl = environment.fbAuthUrl;
+    authUrl = authUrl + `?client_id=${environment.fbClientId}`;
+    authUrl = authUrl + `&redirect_uri=${environment.fbRedirectUrl}`;
+    authUrl = authUrl + '&scope=email&state=state123';
 
-
-// from old urlBuilder
-    // const url = buildUrl(environment.fbAuthUrl, {
-    //   path: 'oauth',
-    //   queryParams: {
-    //     client_id: environment.fbClientId,
-    //     redirect_uri: environment.fbRedirectUrl,
-    //     scope: 'email',
-    //     state: 'state123',
-    //   },
-    // });
+    window.location.href = authUrl;
   }
 
   fbAuth(fbAuthCode: string): Observable<any> {
@@ -144,24 +130,16 @@ export class AuthService {
   }
 
   private linkedinLogin() {
-    const urlBuilder = new URLBuilder(environment.linkedinAuthUrl);
-    urlBuilder.setQueryParam('response_type', 'code');
-    urlBuilder.appendQueryParam('client_id', environment.linkedinClientId);
-    urlBuilder.appendQueryParam('redirect_uri', environment.linkedinRedirectUrl);
-    urlBuilder.appendQueryParam('scope', 'r_emailaddress r_liteprofile');
-    urlBuilder.appendQueryParam('state', 'state123');
-    window.location.href = urlBuilder.toString();
+    let authUrl = environment.linkedinAuthUrl;
+    authUrl = authUrl + `?response_type=code`;
+    authUrl = authUrl + `&client_id=${environment.linkedinClientId}`;
+    authUrl = authUrl + `&redirect_uri=${environment.linkedinRedirectUrl}`;
+    authUrl = authUrl + `&scope=r_emailaddress r_liteprofile`;
+    authUrl = authUrl + `&state=state123`;
 
-    // const url = buildUrl(environment.linkedinAuthUrl, {
-    //   queryParams: {
-    //     response_type: 'code',
-    //     client_id: environment.linkedinClientId,
-    //     redirect_uri: environment.linkedinRedirectUrl,
-    //     scope: 'r_emailaddress r_liteprofile',
-    //     state: 'state123',
-    //   },
-    // });
+    window.location.href = authUrl;
   }
+
   linkedinAuth(linkedinAuthCode: string): Observable<any> {
     return this.http
       .post(this.baseUrl + 'linkedinAuth/login', { linkedinAuthCode })
@@ -190,7 +168,10 @@ export class AuthService {
   }
 
   public get loggedIn(): boolean {
-    const token = localStorage.getItem('token') || '{}';
+    const token = localStorage.getItem('token');
+    if (!token){
+      return false;
+    }
     return !this.jwtHelper.isTokenExpired(token);
   }
 

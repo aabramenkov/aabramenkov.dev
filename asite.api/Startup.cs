@@ -25,7 +25,6 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using GraphQL.Server.Ui.GraphiQL;
 using jsite.api.GraphQL.GraphInputTypes;
 using Renju.HubConfig;
-using Renju;
 
 namespace jsite.api
 {
@@ -53,6 +52,7 @@ namespace jsite.api
 
 
             ConfigureServices(services);
+            ConfigureGraphQL(services);
         }
 
         public void ConfigureProductionServices(IServiceCollection services)

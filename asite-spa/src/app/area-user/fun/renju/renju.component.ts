@@ -31,8 +31,6 @@ export class RenjuComponent implements OnInit {
   private running = new BehaviorSubject<boolean>(false);
   private unsubscribe$ = new Subject();
 
-  // public activeGamers: string[];
-
   public get grid(): Tile[][] {
     return this.state.game.grid;
   }
@@ -82,16 +80,12 @@ export class RenjuComponent implements OnInit {
       })
     );
 
-    const gameOver$ = this.store
-      .select((state) => state.game.gameOver)
-      .pipe(filter((gameOver) => gameOver));
 
     const game$ = merge(invite$, move$, message$);
 
     this.running
       .pipe(
         switchMap((running) => (running ? game$ : [])),
-        takeUntil(gameOver$),
         takeUntil(this.unsubscribe$)
       )
       .subscribe();
@@ -110,25 +104,45 @@ export class RenjuComponent implements OnInit {
   }
 
   clickTile(i: number, j: number) {
+    if (!this.isMoveCorrect(i, j)) {
+      return;
+    }
+    if (!this.state.game.thisGamer || !this.state.game.opponentGamer){
+      return;
+    }
+
+    const tile: Tile = {
+      ...this.state.game.grid[i][j],
+      value: this.state.game.thisGamer?.figure ?? 'X',
+    };
+    const thisGamerName = this.state.game.thisGamer.userName;
+    const opponentGamerName = this.state.game.opponentGamer.userName;
+
+    this.signalrService.broadcastMove(thisGamerName, opponentGamerName, tile);
+  }
+
+  private isMoveCorrect(i: number, j: number): boolean {
     if (!this.state.game.opponentGamer) {
       this.alertService.showMessage('Invate opponent');
-      return;
+      return false;
     }
     if (
       this.state.game.lastMove?.from === this.authService.currentUser?.userName
     ) {
-      alert('you should wait partners move');
-      return;
+      this.alertService.showMessage('you should wait partners move');
+      return false;
     }
     if (this.state.game.grid[i][j].value !== '') {
-      return;
+      return false;
     }
-    const tile: Tile = {
-      ...this.state.game.grid[i][j],
-      value: this.state.game.thisGamer?.figure ?? 'X'
-    };
-
-    this.reducersService.sendMoveReducer(this.state, tile);
+    if (
+      !this.state.game.lastMove &&
+      this.state.game.thisGamer?.figure === 'O'
+    ) {
+      this.alertService.showMessage('No no no.  First move not on your side.');
+      return false;
+    }
+    return true;
   }
 
   inviteOpponent() {
@@ -156,7 +170,7 @@ export class RenjuComponent implements OnInit {
   }
 
   inviteGamer(gamer: string) {
-    if (!this.authService.currentUser){
+    if (!this.authService.currentUser) {
       return;
     }
     const invitation: Invitation = {
@@ -169,8 +183,8 @@ export class RenjuComponent implements OnInit {
     this.signalrService.sendInvitation(invitation);
   }
 
-  handleResetClick() {
-    this.store.reset();
+  handleGameOverClick() {
+    this.reducersService.gameOverReducer(this.state);
   }
 
   registerInGame() {
@@ -181,11 +195,13 @@ export class RenjuComponent implements OnInit {
       );
       return;
     }
-    if (!this.authService.currentUser){
+    if (!this.authService.currentUser) {
       return;
     }
     if (!this.signalrService.isConnected) {
-      this.signalrService.startConnection(this.authService.currentUser?.userName);
+      this.signalrService.startConnection(
+        this.authService.currentUser?.userName
+      );
       this.signalrService.addMoveListener();
       this.setupGame();
       this.running.next(true);
@@ -202,5 +218,4 @@ export class RenjuComponent implements OnInit {
     };
     this.signalrService.sendMessage(message);
   }
-
 }

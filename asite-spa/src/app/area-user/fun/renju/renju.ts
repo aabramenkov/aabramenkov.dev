@@ -10,7 +10,7 @@ export function defaultGameState(): GameState {
   };
 }
 
-function defaultGame(): Game {
+export function defaultGame(): Game {
   const game = {
     grid: defaultGrid(),
     gameStarted: false,

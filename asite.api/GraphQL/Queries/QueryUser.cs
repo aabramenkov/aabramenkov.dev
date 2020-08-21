@@ -16,7 +16,7 @@ namespace jsite.api.GraphQL.Queries
         {
             _context = context;
             {
-                
+
                 Field<PostType>(
                 "post",
                 arguments: new QueryArguments(
@@ -24,43 +24,48 @@ namespace jsite.api.GraphQL.Queries
                 resolve: context =>
                 {
                     var url = context.GetArgument<string>("url");
-                    var post = _context.Posts.Include(p=>p.Comments).ThenInclude(c=>c.ChildComments).ThenInclude(ch=>ch.User).FirstOrDefault(i => i.Url == url);
+                    var post = _context.Posts.Include(post => post.User)
+                    .Include(p => p.Comments)
+                    .ThenInclude(c => c.ChildComments)
+                    .ThenInclude(ch => ch.User)
+                    .FirstOrDefault(i => i.Url == url);
                     return post;
                 }
               );
 
-              Field<ListGraphType<PostType>>(
-                  "posts",
-                  resolve: context => {
-                      var posts = _context.Posts.Where(p => p.Published == true);
-                      return posts;
-                  }
-              );
+                Field<ListGraphType<PostType>>(
+                    "posts",
+                    resolve: context =>
+                    {
+                        var posts = _context.Posts.Include(p => p.User).Where(p => p.Published == true);
+                        return posts;
+                    }
+                );
 
-              Field<CommentType>(
-                  "comment",
-                  arguments: new QueryArguments(
-                      new QueryArgument<IdGraphType> {Name="id"}),
-                      resolve: context => 
-                      {
-                          var id = context.GetArgument<int>("id");
-                          var comment = _context.Comments.Include(c=>c.User).FirstOrDefault(i => i.Id ==id);
-                          return comment;
-                      }
-                  );
-              
-              Field<UserType>(
-                  "user",
-                  arguments: new QueryArguments (
-                      new QueryArgument<IdGraphType> {Name="id"}),
-                      resolve: context =>
-                      {
-                          var id = context.GetArgument<int>("id");
-                          var user = _context.Users.FirstOrDefault(i => i.Id==id);
-                          return user;
-                      }
-                  );
-              
+                Field<CommentType>(
+                    "comment",
+                    arguments: new QueryArguments(
+                        new QueryArgument<IdGraphType> { Name = "id" }),
+                        resolve: context =>
+                        {
+                            var id = context.GetArgument<int>("id");
+                            var comment = _context.Comments.Include(c => c.User).FirstOrDefault(i => i.Id == id);
+                            return comment;
+                        }
+                    );
+
+                Field<UserType>(
+                    "user",
+                    arguments: new QueryArguments(
+                        new QueryArgument<IdGraphType> { Name = "id" }),
+                        resolve: context =>
+                        {
+                            var id = context.GetArgument<int>("id");
+                            var user = _context.Users.FirstOrDefault(i => i.Id == id);
+                            return user;
+                        }
+                    );
+
 
             }
 

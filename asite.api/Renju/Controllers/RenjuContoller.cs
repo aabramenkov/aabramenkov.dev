@@ -17,25 +17,6 @@ namespace Renju.Controllers
             _connectionManager = connectionManager;
         }
 
-        // [AllowAnonymous]
-        // [HttpGet("gamers")]
-        // public async Task<IActionResult> Gamers()
-        // {
-        //     IEnumerable<string> gamers = new List<string>();
-        //     await Task.Run(() => gamers =_connectionManager.OnlineUsers);
-        //     return Ok(gamers);
-        // }
-
-        // [AllowAnonymous]
-        // [HttpGet]
-        // public async Task<IActionResult> RegisterUser()
-        // {
-        //     IEnumerable<Gamer> gamers = new List<Gamer>();
-        //     await Task.Run(() => {gamers = ActiveUsersService.GetActiveGamers();});
-        //     return Ok(gamers);
-        // }
-
-        [AllowAnonymous]
         [HttpGet("allgamers")]
         public async Task<IActionResult> AllGamers()
         {
@@ -43,7 +24,5 @@ namespace Renju.Controllers
             await Task.Run(() => gamers =_connectionManager.OnlineUsers);
             return Ok(gamers);
         }
-
-        
     }
 }

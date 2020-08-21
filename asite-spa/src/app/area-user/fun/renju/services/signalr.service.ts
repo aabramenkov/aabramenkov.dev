@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
-import { Move, Invitation, Message } from '../models/models';
+import { Move, Invitation, Message, Tile } from '../models/models';
 import { ReplaySubject, Subject, Observable, from } from 'rxjs';
-import { AuthService } from 'src/app/_services/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -33,12 +32,6 @@ export class SignalrService {
       .build();
 
     return this.hubConnection.start();
-  }
-
-  public broadcastMove(move: Move) {
-    this.hubConnection
-      .invoke('broadcastRenjuMove', move)
-      .catch((err) => console.error(err));
   }
 
   public addMoveListener() {
@@ -77,4 +70,19 @@ export class SignalrService {
     this.hubConnection.on('sendMessage', (message) => subj.next(message));
     return subj;
   }
+
+  public broadcastMove(fromGamer: string, toGamer: string, tile: Tile) {
+    const move: Move = {
+      from: fromGamer,
+      to: toGamer,
+      i: tile.i,
+      j: tile.j,
+      value: tile.value,
+    };
+    this.hubConnection
+    .invoke('broadcastRenjuMove', move)
+    .catch((err) => console.error(err));
+
+  }
+
 }
