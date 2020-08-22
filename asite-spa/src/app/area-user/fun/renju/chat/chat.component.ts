@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
-import { SignalrService } from '../services/signalr.service';
 import { Message } from '../models/models';
 
 @Component({
@@ -10,6 +9,7 @@ import { Message } from '../models/models';
 export class ChatComponent implements OnInit {
   @Input() chatMessages: Message[] = [];
   @Input() thisUserName!: string;
+
   @Output() msgEvent = new EventEmitter<string>();
   @ViewChild('msgText') msgInput!: ElementRef;
 

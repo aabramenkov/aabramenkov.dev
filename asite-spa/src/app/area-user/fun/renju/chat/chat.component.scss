@@ -38,3 +38,11 @@
   top: 6px;
   opacity: 0.8;
 }
+img.chatAvatar{
+  max-height: 30px;
+  border: 2px solid white;
+  border-radius: 50%;
+  display: inline;
+  margin-right: 2px;
+  cursor: pointer; 
+}

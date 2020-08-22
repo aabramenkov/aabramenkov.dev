@@ -70,12 +70,12 @@ namespace Renju.HubConfig
 
         public async Task<Task> SendMessage(Message message)
         {
-            HashSet<string> connections = _connectionManager.GetConnections(message.To);
+            HashSet<string> connections = _connectionManager.GetConnections(message.To.UserName);
             if (connections != null & connections.Count > 0)
             {
                 await Send(connections, "sendMessage", message);
             }
-            connections = _connectionManager.GetConnections(message.From);
+            connections = _connectionManager.GetConnections(message.From.UserName);
             if (connections != null & connections.Count > 0)
             {
                 await Send(connections, "sendMessage", message);

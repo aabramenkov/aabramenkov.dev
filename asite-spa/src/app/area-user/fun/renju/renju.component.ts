@@ -30,6 +30,7 @@ export class RenjuComponent implements OnInit {
   public state: GameState = defaultGameState();
   private running = new BehaviorSubject<boolean>(false);
   private unsubscribe$ = new Subject();
+  private gameOver$ = new BehaviorSubject<boolean>(false);
 
   public get grid(): Tile[][] {
     return this.state.game.grid;
@@ -80,8 +81,17 @@ export class RenjuComponent implements OnInit {
       })
     );
 
+    const gOver$ =  this.gameOver$.pipe(
+      filter((gameOver) => gameOver),
+      tap(() => {
+        console.log('in this.gameOver$.pipe');
+        this.store.reduce((state) =>
+          this.reducersService.gameOverReducer(state)
+        );
+      })
+    );
 
-    const game$ = merge(invite$, move$, message$);
+    const game$ = merge(invite$, move$, message$, gOver$);
 
     this.running
       .pipe(
@@ -107,7 +117,7 @@ export class RenjuComponent implements OnInit {
     if (!this.isMoveCorrect(i, j)) {
       return;
     }
-    if (!this.state.game.thisGamer || !this.state.game.opponentGamer){
+    if (!this.state.game.thisGamer || !this.state.game.opponentGamer) {
       return;
     }
 
@@ -124,6 +134,10 @@ export class RenjuComponent implements OnInit {
   private isMoveCorrect(i: number, j: number): boolean {
     if (!this.state.game.opponentGamer) {
       this.alertService.showMessage('Invate opponent');
+      return false;
+    }
+    if (!this.state.game.gameStarted){
+      this.alertService.showMessage('Invite opponent to start game.');
       return false;
     }
     if (
@@ -151,30 +165,30 @@ export class RenjuComponent implements OnInit {
       .pipe(
         map((data) => {
           const activeGamers = data;
-          const index = activeGamers.indexOf(
-            this.authService.currentUser?.userName ?? ''
-          );
-          activeGamers.splice(index, 1);
+          // const index = activeGamers.indexOf(
+          //   this.authService.currentUser?.userName ?? ''
+          // );
+          // activeGamers.splice(index, 1);
           return activeGamers;
         }),
-        switchMap((acitveGamers) => {
+        switchMap((activeGamers) => {
           const dialogRef = this.dialog.open(InviteGamerDialogComponent, {
-            data: { activeGamers: acitveGamers },
+            data: { activeGamers},
           });
           return dialogRef.afterClosed();
         })
       )
-      .subscribe((gamer) => {
+      .subscribe((gamer: Gamer) => {
         this.inviteGamer(gamer);
       });
   }
 
-  inviteGamer(gamer: string) {
+  inviteGamer(gamer: Gamer) {
     if (!this.authService.currentUser) {
       return;
     }
     const invitation: Invitation = {
-      from: this.authService.currentUser.userName,
+      from: {userName: this.authService.currentUser.userName, photoUrl:this.authService.currentUser.photoUrl},
       to: gamer,
       status: 'invite',
       initialFigure: 'X',
@@ -184,7 +198,8 @@ export class RenjuComponent implements OnInit {
   }
 
   handleGameOverClick() {
-    this.reducersService.gameOverReducer(this.state);
+    console.log('handleGameOverClick');
+    this.gameOver$.next(true);
   }
 
   registerInGame() {
@@ -200,7 +215,7 @@ export class RenjuComponent implements OnInit {
     }
     if (!this.signalrService.isConnected) {
       this.signalrService.startConnection(
-        this.authService.currentUser?.userName
+        this.authService.currentUser.userName
       );
       this.signalrService.addMoveListener();
       this.setupGame();
@@ -210,9 +225,12 @@ export class RenjuComponent implements OnInit {
   }
 
   sendMessage(msgText: string) {
+    if (!this.state.game.thisGamer || !this.state.game.opponentGamer){
+      return;
+    }
     const message: Message = {
-      from: this.state.game.thisGamer?.userName ?? '',
-      to: this.state.game.opponentGamer?.userName ?? '',
+      from: this.state.game.thisGamer,
+      to: this.state.game.opponentGamer,
       sent: new Date(),
       text: msgText,
     };

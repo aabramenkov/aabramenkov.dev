@@ -7,6 +7,7 @@ import {
   Tile,
   Invitation,
   Message,
+  Gamer,
 } from '../models/models';
 import { GAME_HEIGHT, GAME_WIDTH } from '../renju';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +16,7 @@ import { Observable, of, EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AlertService } from './alert.service';
 import { defaultGame } from '../renju';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +25,8 @@ export class ReducersService {
   constructor(
     private signalrService: SignalrService,
     public dialog: MatDialog,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private authService: AuthService
   ) {}
 
   inviteReducer(
@@ -33,16 +36,12 @@ export class ReducersService {
     const game = { ...state.game };
     switch (invitation.status) {
       case 'invite': {
-        game.thisGamer = {
-          id: 2,
-          userName: invitation.to,
+        const thisGamer: Gamer = {
+          userName: this.authService.currentUser?.userName ?? '',
+          photoUrl: this.authService.currentUser?.photoUrl ?? '',
           figure: 'O',
         };
-        game.opponentGamer = {
-          id: 1,
-          userName: invitation.from,
-          figure: 'X',
-        };
+        const opponentGamer: Gamer = {...invitation.from};
         const inviteResponse: Invitation = {
           ...invitation,
           from: invitation.to,
@@ -52,30 +51,32 @@ export class ReducersService {
         return this.openDialog(invitation.from).pipe(
           switchMap((result) => {
             inviteResponse.status = result ? 'accepted' : 'rejected';
-            game.gameStarted = result;
+            const gameStarted: boolean = result;
             this.signalrService.sendInvitation(inviteResponse);
-            const newState = { ...state, game, invitation: inviteResponse };
+            const newState = {
+              ...state,
+              game: { ...state.game, thisGamer, opponentGamer, gameStarted },
+              invitation: inviteResponse,
+              chatMessages: [],
+            };
             return of(newState);
           })
         );
         break;
       }
       case 'accepted': {
-        game.thisGamer = {
-          id: 1,
-          userName: invitation.to,
-          figure: 'X',
-        };
-        game.opponentGamer = {
-          id: 2,
-          userName: invitation.from,
-          figure: 'O',
-        };
-        game.gameStarted = true;
+        const thisGamer: Gamer = invitation.to;
+        const opponentGamer: Gamer = invitation.from;
+        const gameStarted = true;
+
         this.alertService.showMessage(
-          invitation.from + ' accepted your invitation. Lets game!'
+          invitation.from.userName + ' accepted your invitation. Lets game!'
         );
-        const newState = { ...state, game };
+        const newState = {
+          ...state,
+          game: { ...state.game, thisGamer, opponentGamer, gameStarted },
+          chatMessages: [],
+        };
         return of(newState);
         break;
       }
@@ -232,9 +233,9 @@ export class ReducersService {
     return result;
   }
 
-  openDialog(userName: string): Observable<boolean> {
+  openDialog(gamer: Gamer): Observable<boolean> {
     const dialogRef = this.dialog.open(AcceptGameInvitationDialogComponent, {
-      data: { userName },
+      data: { gamer},
     });
     return dialogRef.afterClosed();
   }

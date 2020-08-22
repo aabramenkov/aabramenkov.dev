@@ -30,23 +30,22 @@ export interface Move {
   value: string;
 }
 export interface Gamer {
-  id: number;
   userName: string;
   figure?: string;
   photoUrl?: string;
 }
 
 export interface Invitation {
-  from: string;
-  to: string;
+  from: Gamer;
+  to: Gamer;
   status: 'inactive'|'invite' | 'accepted' | 'rejected';
   initialFigure: 'X' | 'O';
   sent: Data;
 }
 
 export interface Message {
-  from: string;
-  to: string;
+  from: Gamer;
+  to: Gamer;
   sent: Date;
   text: string;
 }
