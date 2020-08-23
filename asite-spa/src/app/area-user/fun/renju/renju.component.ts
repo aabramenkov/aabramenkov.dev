@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
   Tile,
-  Game,
   Gamer,
   Move,
   Invitation,
@@ -81,10 +80,9 @@ export class RenjuComponent implements OnInit {
       })
     );
 
-    const gOver$ =  this.gameOver$.pipe(
+    const gOver$ = this.gameOver$.pipe(
       filter((gameOver) => gameOver),
       tap(() => {
-        console.log('in this.gameOver$.pipe');
         this.store.reduce((state) =>
           this.reducersService.gameOverReducer(state)
         );
@@ -136,7 +134,7 @@ export class RenjuComponent implements OnInit {
       this.alertService.showMessage('Invate opponent');
       return false;
     }
-    if (!this.state.game.gameStarted){
+    if (!this.state.game.gameStarted) {
       this.alertService.showMessage('Invite opponent to start game.');
       return false;
     }
@@ -165,15 +163,15 @@ export class RenjuComponent implements OnInit {
       .pipe(
         map((data) => {
           const activeGamers = data;
-          // const index = activeGamers.indexOf(
-          //   this.authService.currentUser?.userName ?? ''
-          // );
-          // activeGamers.splice(index, 1);
+          const index = activeGamers.findIndex(
+            (gamer) => gamer.userName === this.authService.currentUser?.userName
+          );
+          activeGamers.splice(index, 1);
           return activeGamers;
         }),
         switchMap((activeGamers) => {
           const dialogRef = this.dialog.open(InviteGamerDialogComponent, {
-            data: { activeGamers},
+            data: { activeGamers },
           });
           return dialogRef.afterClosed();
         })
@@ -188,10 +186,9 @@ export class RenjuComponent implements OnInit {
       return;
     }
     const invitation: Invitation = {
-      from: {userName: this.authService.currentUser.userName, photoUrl:this.authService.currentUser.photoUrl},
-      to: gamer,
+      from: { ...this.authService.currentUser, figure: 'X' } as Gamer,
+      to: { ...gamer, figure: 'O' },
       status: 'invite',
-      initialFigure: 'X',
       sent: Date.now,
     };
     this.signalrService.sendInvitation(invitation);
@@ -220,12 +217,15 @@ export class RenjuComponent implements OnInit {
       this.signalrService.addMoveListener();
       this.setupGame();
       this.running.next(true);
+      this.alertService.showMessage(
+        'Ok, you registered. Now invite opponent or wait while opponent invite you to start game'
+      );
       return;
     }
   }
 
   sendMessage(msgText: string) {
-    if (!this.state.game.thisGamer || !this.state.game.opponentGamer){
+    if (!this.state.game.thisGamer || !this.state.game.opponentGamer) {
       return;
     }
     const message: Message = {

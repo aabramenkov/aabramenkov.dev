@@ -48,7 +48,7 @@ export class SignalrService {
 
   public sendInvitation(invitation: Invitation) {
     this.hubConnection
-      .invoke('InviteGamer', invitation.to, invitation)
+      .invoke('InviteGamer', invitation.to.userName, invitation)
       .catch((err) => console.log(err));
   }
 

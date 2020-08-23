@@ -21,16 +21,6 @@ export class HasRoleDirective implements OnInit {
   isVisible = false;
 
   ngOnInit(): void {
-    this.authService.currentDecodedToken.subscribe((decodedToken) => {
-
-      if (!decodedToken) {
-        this.viewContainerRef.clear();
-      } else {
-        const userRoles = decodedToken.role as Array<string>;
-        if (!userRoles) {
-          this.viewContainerRef.clear();
-        }
-      }
       if (this.authService.roleMatch(this.appHasRole)) {
         if (!this.isVisible) {
           this.isVisible = true;
@@ -43,6 +33,5 @@ export class HasRoleDirective implements OnInit {
         this.isVisible = false;
         this.viewContainerRef.clear();
       }
-    });
   }
 }

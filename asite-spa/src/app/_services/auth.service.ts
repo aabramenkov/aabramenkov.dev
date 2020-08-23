@@ -18,8 +18,6 @@ export class AuthService {
   jwtHelper = new JwtHelperService();
   baseUrl = environment.apiUrl;
 
-  decodedTokenBehavourSubject = new BehaviorSubject<any>({});
-  currentDecodedToken = this.decodedTokenBehavourSubject.asObservable();
 
   currentUser: User | undefined;
   photoUrl = new BehaviorSubject<string>(' ../../assets/user.png');
@@ -32,7 +30,6 @@ export class AuthService {
       !this.jwtHelper.isTokenExpired(tokenFromLocalStorage)
     ) {
       this.decodedToken = this.jwtHelper.decodeToken(tokenFromLocalStorage);
-      this.changeDecodedToken(this.decodedToken);
 
       const userFromLocalStorage = localStorage.getItem('user');
       if (userFromLocalStorage) {
@@ -81,7 +78,6 @@ export class AuthService {
     localStorage.removeItem('actualPageUrl');
     this.decodedToken = null;
     this.currentUser = undefined;
-    this.changeDecodedToken(null);
   }
 
   loginWithEmail(userForLogin: any) {
@@ -93,7 +89,6 @@ export class AuthService {
           localStorage.setItem('user', JSON.stringify(user.user));
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
           this.currentUser = user.user;
-          this.changeDecodedToken(this.decodedToken);
           if (this.currentUser) {
             this.changeMemberPhoto(this.currentUser.photoUrl);
           }
@@ -120,7 +115,6 @@ export class AuthService {
           localStorage.setItem('user', JSON.stringify(user.user));
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
           this.currentUser = user.user;
-          this.changeDecodedToken(this.decodedToken);
           if (this.currentUser) {
             this.changeMemberPhoto(this.currentUser.photoUrl);
           }
@@ -151,7 +145,6 @@ export class AuthService {
             localStorage.setItem('user', JSON.stringify(user.user));
             this.decodedToken = this.jwtHelper.decodeToken(user.token);
             this.currentUser = user.user;
-            this.changeDecodedToken(this.decodedToken);
             if (this.currentUser) {
               this.changeMemberPhoto(this.currentUser.photoUrl);
             }
@@ -161,10 +154,6 @@ export class AuthService {
   }
   changeMemberPhoto(photoUrl: string) {
     this.photoUrl.next(photoUrl);
-  }
-
-  changeDecodedToken(decodedToken: any) {
-    this.decodedTokenBehavourSubject.next(decodedToken);
   }
 
   public get loggedIn(): boolean {

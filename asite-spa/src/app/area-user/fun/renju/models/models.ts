@@ -39,7 +39,6 @@ export interface Invitation {
   from: Gamer;
   to: Gamer;
   status: 'inactive'|'invite' | 'accepted' | 'rejected';
-  initialFigure: 'X' | 'O';
   sent: Data;
 }
 

@@ -1,7 +1,8 @@
 <table *ngIf="activeGamers.length>0">
   <tbody>
     <tr *ngFor="let gamer of activeGamers">
-      <td>{{ gamer }}</td>
+      <img class="chatAvatar" src="{{gamer.photoUrl ||  '../../../../../assets/user.png'}}"/>
+      <td>{{ gamer.userName }}</td>
       <td>
         <button mat-raised-button (click)="inviteGamer(gamer)">Invite</button>
       </td>

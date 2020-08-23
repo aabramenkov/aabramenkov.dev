@@ -39,7 +39,7 @@ export class ReducersService {
         const thisGamer: Gamer = {
           userName: this.authService.currentUser?.userName ?? '',
           photoUrl: this.authService.currentUser?.photoUrl ?? '',
-          figure: 'O',
+          figure: invitation.to.figure,
         };
         const opponentGamer: Gamer = {...invitation.from};
         const inviteResponse: Invitation = {
@@ -235,7 +235,7 @@ export class ReducersService {
 
   openDialog(gamer: Gamer): Observable<boolean> {
     const dialogRef = this.dialog.open(AcceptGameInvitationDialogComponent, {
-      data: { gamer},
+      data: gamer,
     });
     return dialogRef.afterClosed();
   }
