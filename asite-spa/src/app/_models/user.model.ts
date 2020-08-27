@@ -4,6 +4,7 @@ import {Comment} from './comment.model';
 export interface User {
     id: number;
     userName: string;
+    nickName: string;
     email: string;
     photoUrl: string;
     lastActive: Date;

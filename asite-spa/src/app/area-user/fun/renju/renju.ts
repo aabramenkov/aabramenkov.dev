@@ -30,7 +30,6 @@ function defaultInvition(): Invitation {
     from: emptyGamer(),
     to: emptyGamer(),
     status: 'inactive',
-    initialFigure: 'X',
     sent: Date.now,
   };
   return invitation;
@@ -39,6 +38,7 @@ function defaultInvition(): Invitation {
 function emptyGamer(): Gamer {
   return {
     userName: '',
+    nickName: '',
     photoUrl: '',
   };
 }

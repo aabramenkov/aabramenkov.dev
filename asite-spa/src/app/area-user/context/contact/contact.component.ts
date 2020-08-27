@@ -52,14 +52,14 @@ export class ContactComponent implements OnInit {
     this.isSendingMessageInProgress = true;
     this.emailService.sendEmail(this.contactForm.value).subscribe(
       () => {
-        this.snackBar.open('Your message sucesfully sent', 'Julia Site', {
+        this.snackBar.open('Your message sucesfully sent', '', {
           duration: 2000,
           panelClass: ['mat-toolbar', 'mat-primary'],
         });
         this.contactForm.reset();
       },
       (error) => {
-        this.snackBar.open('Error on sending message.', 'Julia Site', {
+        this.snackBar.open('Error on sending message.', '', {
           duration: 2000,
           panelClass: ['mat-toolbar', 'mat-warn'],
         });

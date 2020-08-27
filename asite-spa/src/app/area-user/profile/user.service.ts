@@ -3,7 +3,6 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/_models/user.model';
-import { ProfileModule } from './profile.module';
 
 @Injectable()
 export class UserService {

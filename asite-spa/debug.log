@@ -138,3 +138,22 @@
 [0625/010448.080:WARNING:pe_image_reader.cc(340)] could not read dos header from C:\WINDOWS\System32\WINTRUST.dll
 [0625/010448.080:ERROR:process_memory_win.cc(73)] ReadMemory at 0x2056d760000 of 64 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
 [0625/010448.080:WARNING:pe_image_reader.cc(340)] could not read dos header from C:\WINDOWS\System32\bcryptPrimitives.dll
+[0825/231910.395:ERROR:process_memory_win.cc(73)] ReadMemory at 0x209167ff110 of 72 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[0825/232224.148:ERROR:process_memory_win.cc(73)] ReadMemory at 0x14017f8f1b0 of 72 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[0825/232224.149:WARNING:pe_image_annotations_reader.cc(134)] could not read annotations list object in C:\Program Files (x86)\Google\Chrome\Application\84.0.4147.135\chrome_elf.dll
+[0825/232224.149:ERROR:process_memory_win.cc(73)] ReadMemory at 0x14018560000 of 64 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[0825/232224.149:WARNING:pe_image_reader.cc(340)] could not read dos header from C:\WINDOWS\System32\RPCRT4.dll
+[0825/232224.150:ERROR:process_memory_win.cc(73)] ReadMemory at 0x14017fdfb00 of 72 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[0825/232224.150:WARNING:pe_image_annotations_reader.cc(134)] could not read annotations list object in C:\Program Files (x86)\Google\Chrome\Application\84.0.4147.135\chrome.dll
+[0825/232224.155:ERROR:process_memory_win.cc(73)] ReadMemory at 0x14017f8f1b0 of 72 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[0825/232224.155:WARNING:pe_image_annotations_reader.cc(134)] could not read annotations list object in C:\Program Files (x86)\Google\Chrome\Application\84.0.4147.135\chrome_elf.dll
+[0825/232224.155:ERROR:process_memory_win.cc(73)] ReadMemory at 0x14018560000 of 64 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[0825/232224.155:WARNING:pe_image_reader.cc(340)] could not read dos header from C:\WINDOWS\System32\RPCRT4.dll
+[0825/232224.156:ERROR:process_memory_win.cc(73)] ReadMemory at 0x14017fdfb00 of 72 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[0825/232224.156:WARNING:pe_image_annotations_reader.cc(134)] could not read annotations list object in C:\Program Files (x86)\Google\Chrome\Application\84.0.4147.135\chrome.dll
+[0825/232224.157:ERROR:process_memory_win.cc(73)] ReadMemory at 0x14017f8f1b0 of 72 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[0825/232224.157:WARNING:pe_image_annotations_reader.cc(134)] could not read annotations list object in C:\Program Files (x86)\Google\Chrome\Application\84.0.4147.135\chrome_elf.dll
+[0825/232224.157:ERROR:process_memory_win.cc(73)] ReadMemory at 0x14018560000 of 64 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[0825/232224.157:WARNING:pe_image_reader.cc(340)] could not read dos header from C:\WINDOWS\System32\RPCRT4.dll
+[0825/232224.157:ERROR:process_memory_win.cc(73)] ReadMemory at 0x14017fdfb00 of 72 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[0825/232224.157:WARNING:pe_image_annotations_reader.cc(134)] could not read annotations list object in C:\Program Files (x86)\Google\Chrome\Application\84.0.4147.135\chrome.dll

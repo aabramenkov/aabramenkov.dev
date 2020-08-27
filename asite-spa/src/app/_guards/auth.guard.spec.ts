@@ -6,11 +6,11 @@ import { Router, ActivatedRouteSnapshot, Data } from '@angular/router';
 import { MatDialogModule } from '@angular/material/dialog';
 
 class MockActivatedRouteSnapshot {
-  data: Data;
+  data: Data|undefined;
 }
 
 class MockRouter {
-  navigate(path) {}
+  navigate(path: string) {}
 }
 
 describe('TestGuard', () => {

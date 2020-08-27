@@ -15,8 +15,9 @@ export class ProfileComponent implements OnInit {
   user: User = {
     id: 0,
     userName: 'string',
+    nickName: 'string',
     email: 'string',
-    photoUrl: 'string',
+    photoUrl: '',
     lastActive: new Date(),
     created: new Date(),
     registeredVia: 'string',
@@ -36,7 +37,7 @@ export class ProfileComponent implements OnInit {
       .subscribe((data: User) => {
         this.user = data;
         this.userForm.setValue({
-          userName: this.user.userName,
+          nickName: this.user.nickName,
           email: this.user.email,
         });
       });
@@ -44,7 +45,7 @@ export class ProfileComponent implements OnInit {
 
   createUserForm() {
     this.userForm = this.formBuilder.group({
-      userName: [this.user.userName, Validators.required],
+      nickName: [this.user.nickName, Validators.required],
       email: [this.user.email, [Validators.required, Validators.email]],
     });
   }

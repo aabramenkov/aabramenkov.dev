@@ -49,11 +49,33 @@ namespace jsite.api.Controllers
                     uploadResult = await _cloudinary.UploadAsync(uploadParams);
                 }
             }
-            if (uploadResult.StatusCode == HttpStatusCode.OK){
+            if (uploadResult.StatusCode == HttpStatusCode.OK)
+            {
                 string cloudinaryReturnUri = uploadResult.SecureUrl.ToString();
-                return Ok(new { Uri = cloudinaryReturnUri});
+                return Ok(new { Uri = cloudinaryReturnUri });
             }
-            return BadRequest (uploadResult.Error);
+            return BadRequest(uploadResult.Error);
+        }
+
+
+
+        public async Task<string> UploadAvatarByUrl(string avatarUrl)
+        {
+            var uploadResult = new ImageUploadResult();
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(avatarUrl),
+                Transformation = new CloudinaryDotNet.Transformation().Width(50)
+            };
+            uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            if (uploadResult.StatusCode == HttpStatusCode.OK)
+            {
+                string cloudinaryReturnUri = uploadResult.SecureUrl.ToString();
+                return cloudinaryReturnUri;
+            }
+            return null;
         }
 
     }

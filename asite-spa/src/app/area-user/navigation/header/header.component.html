@@ -27,10 +27,10 @@
         <a mat-list-item routerLink="/about">About</a>
         <a mat-list-item routerLink="/portfolio">Portfolio</a>
         <a mat-list-item routerLink="/blog">Blog</a>
-        <a mat-list-item routerLink="/fun">Fun</a>
+        <a mat-list-item routerLink="/fun">Games</a>
         <a mat-list-item routerLink="/contacts">Contact</a>
         <a
-          *appHasRole="['Admin', 'Moderator', 'User']"
+          *appHasRole="['Admin', 'Moderator']"
           mat-list-item
           routerLink="/admin"
           >Admin Panel</a
@@ -47,7 +47,7 @@
         <img
           class="appAvatar"
           [matMenuTriggerFor]="menu"
-          src="../../../../../assets/user.png"
+          src="{{photoUrl || '../../../../../assets/user.png'}}"
         />
         <mat-menu #menu="matMenu">
           <a mat-menu-item routerLink="/profile">

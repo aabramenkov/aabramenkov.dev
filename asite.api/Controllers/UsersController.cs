@@ -98,7 +98,7 @@ namespace jsite.api.Controllers
 
             var user = await _userManager.FindByIdAsync(id.ToString());
             user.Email = userForUpdateDto.Email;
-            user.UserName = userForUpdateDto.UserName;
+            user.NickName = userForUpdateDto.NickName;
             var result  = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
                 return BadRequest("failed to update user");

@@ -1,7 +1,7 @@
 <div FxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
     <img src="../../../../../assets/user.png" class="comment-avatar"/>
     <div class="comment-body">
-      <span class="comment-author">{{comment.user.userName}}</span> 
+      <span class="comment-author">{{comment.user.nickName}}</span> 
       <span class="comment-timeAgo"> : {{comment.created.toString() | timeAgo}}</span><br> 
       {{comment.text}}
       <div *ngIf="isAddCommentActive">

@@ -30,6 +30,7 @@ export interface Move {
   value: string;
 }
 export interface Gamer {
+  nickName: string;
   userName: string;
   figure?: string;
   photoUrl?: string;

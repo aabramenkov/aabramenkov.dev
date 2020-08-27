@@ -30,7 +30,6 @@ export class SignalrService {
         }
       )
       .build();
-
     return this.hubConnection.start();
   }
 

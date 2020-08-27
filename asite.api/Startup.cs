@@ -117,7 +117,7 @@ namespace jsite.api
             }).AddNewtonsoftJson(opt =>
              {
                  opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-             });
+             }).AddControllersAsServices();
 
             services.AddCors();
             services.AddAutoMapper(typeof(ArticleRepository).Assembly);

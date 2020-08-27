@@ -8,8 +8,8 @@
         <button mat-raised-button (click)="inviteOpponent()" *ngIf="isConnected" [disabled] ="state.game.gameStarted">Invite opponent</button>
       </div>
       <div *ngIf="state.game.gameStarted" class="gameInformation">
-        <span>{{state.game.thisGamer?.userName}}: <strong>{{state.game.thisGamer?.figure}}    </strong></span>
-        <span>{{state.game.opponentGamer?.userName}}: <strong>{{state.game.opponentGamer?.figure}}</strong></span>
+        <span>{{state.game.thisGamer?.nickName}}: <strong>{{state.game.thisGamer?.figure}}    </strong></span>
+        <span>{{state.game.opponentGamer?.nickName}}: <strong>{{state.game.opponentGamer?.figure}}</strong></span>
       </div>
     </div>
 
@@ -29,6 +29,11 @@
     <div class="game-over" *ngIf="state.game.gameOver">
       <span>Game Over.</span>
       <button mat-raised-button (click)="handleGameOverClick()">Ok</button>
+    </div>
+    <div class="gameComment">
+      <img class="appAvatar" src="../../../../assets/AlexAvatar.png"/> 
+      I wrote this game just to test WebSockets technology. <br>
+       In this case -  SignalR (thx Micrisoft for it)
     </div>
 
   </div>

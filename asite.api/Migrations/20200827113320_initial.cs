@@ -43,10 +43,12 @@ namespace asite.api.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
+                    NickName = table.Column<string>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false),
                     LastActive = table.Column<DateTime>(nullable: false),
                     RegisteredVia = table.Column<string>(nullable: true),
-                    PhotoUrl = table.Column<string>(nullable: true)
+                    PhotoUrl = table.Column<string>(nullable: true),
+                    SnakeScore = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -306,16 +308,20 @@ namespace asite.api.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "1601dd39-2485-48b5-b734-19f87e6a7c35", "Admin", "ADMIN" },
-                    { 2, "c807d4f7-4b54-426f-a96b-40dae8a0647c", "Moderator", "MODERATOR" },
-                    { 3, "4103e135-9c5a-4fab-a988-07e211649f45", "User", "USER" },
-                    { 4, "96ffe1da-2d11-4abd-a70c-2a8b8943534c", "VIP", "VIP" }
+                    { 1, "fa0f80ca-9be9-4196-b9df-e8be41f9c17e", "Admin", "ADMIN" },
+                    { 2, "e04d339d-b151-4b5a-9636-f07d710a2b87", "Moderator", "MODERATOR" },
+                    { 3, "f9ce5fcc-6d5d-4eea-9ff1-75fe815625d0", "User", "USER" },
+                    { 4, "681a5bed-2908-4470-ad56-728ea7d94079", "VIP", "VIP" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "LastActive", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "PhotoUrl", "RegisteredVia", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, "c2f3ffd3-fde8-4b48-9dac-0c94f25d1ccf", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "aleksey.abramenkov@gmail.com", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, "ALEKSEY.ABRAMENKOV@GMAIL.COM", null, null, null, false, "https://scontent.fdps2-1.fna.fbcdn.net/v/t1.0-1/p160x160/74166092_3112088975533175_1448875138194866176_n.jpg?_nc_cat=111&_nc_sid=dbb9e7&_nc_eui2=AeF4ei0yZptSVX3GCIMJA5hMtYd8mGveAbG1h3yYa94Bsb4W2y4sO0eiLRq3qyFkoM3l8weUf9Vd3hyOh7UESOe9&_nc_ohc=qI0EnVXBna4AX8YxPGt&_nc_ht=scontent.fdps2-1.fna&_nc_tp=6&oh=1023d5872642402313a7a097a3ba65a7&oe=5EDCE65F", null, "00000000-0000-0000-0000-000000000000", false, "Alex" });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "LastActive", "LockoutEnabled", "LockoutEnd", "NickName", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "PhotoUrl", "RegisteredVia", "SecurityStamp", "SnakeScore", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { 1, 0, "03d3d298-0a8e-4136-92bf-945cd5039894", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "aleksey.abramenkov@gmail.com", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, null, "ALEKSEY.ABRAMENKOV@GMAIL.COM", null, null, null, false, "../../../../../assets/user.png", null, "00000000-0000-0000-0000-000000000000", 0, false, "aleksey.abramenkov" },
+                    { 2, 0, "c69f7db4-73cc-4097-8657-ffd2abc0083a", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "kate@gmail.com", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, null, "KATE@GMAIL.COM", null, null, null, false, "../../../../../assets/user.png", null, "00000000-0000-0000-0000-000000000000", 5, false, "Kate" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Categories",
@@ -342,7 +348,11 @@ namespace asite.api.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "UserId", "RoleId" },
-                values: new object[] { 1, 1 });
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 3 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_CategoryId",

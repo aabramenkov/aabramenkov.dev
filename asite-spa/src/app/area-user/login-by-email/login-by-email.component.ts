@@ -26,10 +26,10 @@ export class LoginByEmailComponent implements OnInit {
   loginWithEmail() {
     this.authService.loginWithEmail(this.loginForm.value).subscribe(
       () => {
-        this.router.navigate(['about'])
+        this.router.navigate(['about']);
       },
       (error) => {
-        this.router.navigate(['about'])
+        this.router.navigate(['about']);
       }
     );
   }

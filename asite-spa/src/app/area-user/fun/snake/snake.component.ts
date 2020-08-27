@@ -6,13 +6,7 @@ import {
   ɵmarkDirty as markDirty,
 } from '@angular/core';
 import { GameState, Tile } from './models';
-import {
-  BehaviorSubject,
-  Subject,
-  fromEvent,
-  interval,
-  merge,
-} from 'rxjs';
+import { BehaviorSubject, Subject, fromEvent, interval, merge } from 'rxjs';
 import { StoreService } from './store.service';
 import {
   distinctUntilChanged,
@@ -24,6 +18,7 @@ import {
 import { directionReducer, tickReducer } from './snake';
 import { AuthService } from 'src/app/_services/auth.service';
 import { GamersService, Gamer } from './gamers.service';
+import { Router } from '@angular/router';
 
 const TICK_INTERVAL = 150;
 
@@ -54,7 +49,8 @@ export class SnakeComponent implements OnInit {
   constructor(
     private store: StoreService,
     private authService: AuthService,
-    private gamersService: GamersService
+    private gamersService: GamersService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +66,7 @@ export class SnakeComponent implements OnInit {
       this.currentGamer = {
         id: user?.id ?? 0,
         userName: user?.userName ?? '',
+        nickName: user?.nickName ?? '',
         snakeScore: user?.snakeScore ?? 0,
       };
     }
@@ -86,7 +83,7 @@ export class SnakeComponent implements OnInit {
           this.gamers.push(this.currentGamer);
         }
       }
-      this.gamers.push({ id: 2, userName: 'Kate A.', snakeScore: 5 });
+      this.gamers.push({ id: 2, userName: 'Kate', nickName: 'Kate A.', snakeScore: 5 });
       this.gamers = this.gamers.sort((a, b) => b.snakeScore - a.snakeScore);
       markDirty(this);
     });
@@ -94,8 +91,9 @@ export class SnakeComponent implements OnInit {
 
   setupGame() {
     const direction$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
-      distinctUntilChanged((a, b) =>
-        a === b, (x: KeyboardEvent) => x.code
+      distinctUntilChanged(
+        (a, b) => a === b,
+        (x: KeyboardEvent) => x.code
       ),
       tap((event: KeyboardEvent) =>
         this.store.reduce((state) => directionReducer(state, event))
@@ -129,13 +127,16 @@ export class SnakeComponent implements OnInit {
 
   private updateCurrentGamerScore() {
     const gamer = this.gamers.find((g) => g.id === this.currentGamer.id);
-    if (!gamer){
+    if (!gamer) {
       return;
     }
     if (gamer.snakeScore < this.state.game.snake.length - 3) {
       gamer.snakeScore = this.state.game.snake.length - 3;
       this.gamers.sort((a, b) => b.snakeScore - a.snakeScore);
-      this.gamersService.updateGamerScore(gamer.id, gamer.snakeScore);
+      this.gamersService.updateGamerScore(gamer.id, gamer.snakeScore).subscribe(
+        () => {},
+        (err) => console.log(err)
+      );
     }
   }
 
@@ -155,7 +156,10 @@ export class SnakeComponent implements OnInit {
 
   public handleStartClick() {
     if (!this.authService.currentUser) {
-      this.authService.login('Only registered users can play this game');
+      this.authService.login(
+        'Only registered users can play this game',
+        this.router.url
+      );
       return;
     }
     this.running.next(true);

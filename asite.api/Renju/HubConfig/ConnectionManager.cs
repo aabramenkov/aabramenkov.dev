@@ -24,6 +24,7 @@ namespace Renju.HubConfig
         {
 
             var conn = new HashSet<string>();
+
             try
             {
                 lock (userMap)

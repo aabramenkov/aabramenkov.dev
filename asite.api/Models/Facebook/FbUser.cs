@@ -10,6 +10,9 @@ namespace jsite.api.Models.Facebook
             [JsonProperty("email")]
             public string Email { get; set; }
 
+            [JsonProperty("name")]
+            public string Name {get;set;}
+
             [JsonProperty("picture")]
             public Picture Picture { get; set; }
         }

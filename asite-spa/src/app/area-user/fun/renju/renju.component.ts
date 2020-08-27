@@ -211,15 +211,20 @@ export class RenjuComponent implements OnInit {
       return;
     }
     if (!this.signalrService.isConnected) {
-      this.signalrService.startConnection(
-        this.authService.currentUser.userName
-      );
-      this.signalrService.addMoveListener();
-      this.setupGame();
-      this.running.next(true);
-      this.alertService.showMessage(
-        'Ok, you registered. Now invite opponent or wait while opponent invite you to start game'
-      );
+      this.signalrService
+        .startConnection(this.authService.currentUser.userName)
+        .then(() => {
+          this.signalrService.addMoveListener();
+          this.setupGame();
+          this.running.next(true);
+          this.alertService.showMessage(
+            'Ok, you registered. Now invite opponent or wait while opponent invite you to start game'
+          );
+        })
+        .catch(() =>
+          this.alertService.showMessage('Error on creating game connection')
+        );
+
       return;
     }
   }

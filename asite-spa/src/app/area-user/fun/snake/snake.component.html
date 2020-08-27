@@ -25,13 +25,21 @@
           <button class="snake-reset" (click)="handleResetClick()">Reset</button>
         </div>
       </div>
+
+      <div class="gameComment">
+        <img class="appAvatar" src="../../../../assets/AlexAvatar.png"/> 
+        I wrote this game just because <br>
+          a) I love it from my childhood. <br>
+          b) I was interested in to check what is Reactive Programming (RxJS)
+      </div>
+  
   </div>
   <div class="game-score">
     <div fxLayout="column" fxLayoutAlign="start start">
       <div style="text-align: center;"><p>Top snakers</p> </div>
       <mat-card *ngFor="let gamer of gamers">
         <mat-card-content>
-          {{gamer.userName}} score: {{gamer.snakeScore}}
+          {{gamer.nickName}} score: {{gamer.snakeScore}}
         </mat-card-content>
       </mat-card>
     </div>

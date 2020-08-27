@@ -36,11 +36,7 @@ export class ReducersService {
     const game = { ...state.game };
     switch (invitation.status) {
       case 'invite': {
-        const thisGamer: Gamer = {
-          userName: this.authService.currentUser?.userName ?? '',
-          photoUrl: this.authService.currentUser?.photoUrl ?? '',
-          figure: invitation.to.figure,
-        };
+        const thisGamer: Gamer = { ...this.authService.currentUser, figure: invitation.to.figure} as Gamer;
         const opponentGamer: Gamer = {...invitation.from};
         const inviteResponse: Invitation = {
           ...invitation,
@@ -70,7 +66,7 @@ export class ReducersService {
         const gameStarted = true;
 
         this.alertService.showMessage(
-          invitation.from.userName + ' accepted your invitation. Lets game!'
+          invitation.from.nickName + ' accepted your invitation. Lets game!'
         );
         const newState = {
           ...state,
@@ -143,7 +139,7 @@ export class ReducersService {
     if (tiles.size >= 5) {
       tiles.forEach((tl) => {
         game.grid[tl.i][tl.j].isWinning =
-          game.thisGamer?.userName === move.from ? 1 : -1;
+          game.thisGamer?.nickName === move.from ? 1 : -1;
       });
       game.gameOver = true;
       game.gameStarted = false;

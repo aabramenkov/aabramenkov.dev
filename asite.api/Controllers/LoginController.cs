@@ -41,6 +41,7 @@ namespace jsite.api.Controllers
             if (result.Succeeded)
             {
                 string token = await AppTokens.GenerateJwtToken(user, _config, _userManager);
+                
                 var userForReturnDto = _mapper.Map<UserForReturnDto>(user);
                 return Ok(new { token = token, user = userForReturnDto });
             }

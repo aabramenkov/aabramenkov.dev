@@ -2,7 +2,7 @@
   <tbody>
     <tr *ngFor="let gamer of activeGamers">
       <img class="chatAvatar" src="{{gamer.photoUrl ||  '../../../../../assets/user.png'}}"/>
-      <td>{{ gamer.userName }}</td>
+      <td>{{ gamer.nickName }}</td>
       <td>
         <button mat-raised-button (click)="inviteGamer(gamer)">Invite</button>
       </td>

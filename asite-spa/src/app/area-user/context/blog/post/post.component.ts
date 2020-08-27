@@ -10,6 +10,7 @@ import { GraphqlService } from '../_services/graphql.service';
 import { EmailService } from 'src/app/_services/email.service';
 import { Email } from 'src/app/_models/email.model';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post',
@@ -65,18 +66,19 @@ export class PostComponent implements OnInit {
         if (this.post) {
           this.post.comments.push(comment);
         }
+
+        const email: Email = {
+          email: '',
+          message:
+            'A new comment was added. <br>' +
+            'Link: aabramenkov.dev' +
+            this.router.url +
+            '<br>' +
+            'Text: ' +
+            commentText,
+        };
+        this.emailService.sendEmail(email).subscribe();
       });
-    const email: Email = {
-      email: '',
-      message:
-        'A new comment was added. <br>' +
-        'Link: aabramenkov.dev' +
-        this.router.url +
-        '<br>' +
-        'Text: ' +
-        commentText,
-    };
-    this.emailService.sendEmail(email).subscribe();
     this.isAddCommentFieldActive = false;
   }
 

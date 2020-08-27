@@ -101,6 +101,11 @@ namespace asite.api.Migrations
                         {
                             UserId = 1,
                             RoleId = 1
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            RoleId = 3
                         });
                 });
 
@@ -385,28 +390,28 @@ namespace asite.api.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "082ef461-a5ed-4d68-861c-bd3e4df50112",
+                            ConcurrencyStamp = "fa0f80ca-9be9-4196-b9df-e8be41f9c17e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "c92db221-9d61-4945-a45e-a1604f6c217d",
+                            ConcurrencyStamp = "e04d339d-b151-4b5a-9636-f07d710a2b87",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "337a0fef-184f-4a45-b25b-844b39fd5187",
+                            ConcurrencyStamp = "f9ce5fcc-6d5d-4eea-9ff1-75fe815625d0",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = 4,
-                            ConcurrencyStamp = "c182d066-f1e6-4e44-914b-382513ec81a7",
+                            ConcurrencyStamp = "681a5bed-2908-4470-ad56-728ea7d94079",
                             Name = "VIP",
                             NormalizedName = "VIP"
                         });
@@ -443,6 +448,9 @@ namespace asite.api.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("NickName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
@@ -496,7 +504,7 @@ namespace asite.api.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fe025762-a448-4d2c-aeca-826e7c803ce5",
+                            ConcurrencyStamp = "03d3d298-0a8e-4136-92bf-945cd5039894",
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "aleksey.abramenkov@gmail.com",
                             EmailConfirmed = false,
@@ -504,11 +512,29 @@ namespace asite.api.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALEKSEY.ABRAMENKOV@GMAIL.COM",
                             PhoneNumberConfirmed = false,
-                            PhotoUrl = "https://scontent.fdps2-1.fna.fbcdn.net/v/t1.0-1/p160x160/74166092_3112088975533175_1448875138194866176_n.jpg?_nc_cat=111&_nc_sid=dbb9e7&_nc_eui2=AeF4ei0yZptSVX3GCIMJA5hMtYd8mGveAbG1h3yYa94Bsb4W2y4sO0eiLRq3qyFkoM3l8weUf9Vd3hyOh7UESOe9&_nc_ohc=qI0EnVXBna4AX8YxPGt&_nc_ht=scontent.fdps2-1.fna&_nc_tp=6&oh=1023d5872642402313a7a097a3ba65a7&oe=5EDCE65F",
+                            PhotoUrl = "../../../../../assets/user.png",
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             SnakeScore = 0,
                             TwoFactorEnabled = false,
-                            UserName = "Alex"
+                            UserName = "aleksey.abramenkov"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c69f7db4-73cc-4097-8657-ffd2abc0083a",
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "kate@gmail.com",
+                            EmailConfirmed = false,
+                            LastActive = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LockoutEnabled = false,
+                            NormalizedEmail = "KATE@GMAIL.COM",
+                            PhoneNumberConfirmed = false,
+                            PhotoUrl = "../../../../../assets/user.png",
+                            SecurityStamp = "00000000-0000-0000-0000-000000000000",
+                            SnakeScore = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Kate"
                         });
                 });
 

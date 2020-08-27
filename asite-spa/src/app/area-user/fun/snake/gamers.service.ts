@@ -22,5 +22,6 @@ export class GamersService {
 export interface Gamer{
   id: number;
   userName: string;
+  nickName: string;
   snakeScore: number;
 }

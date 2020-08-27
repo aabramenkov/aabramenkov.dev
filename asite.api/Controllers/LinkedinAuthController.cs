@@ -27,9 +27,11 @@ namespace jsite.api.Controllers
         private readonly IConfiguration _config;
         private static readonly HttpClient _httpClient = new HttpClient();
 
+        private readonly PhotoController _photoController;
 
-        public LinkedinAuthController(IMapper mapper, UserManager<User> userManager, IConfiguration config)
+        public LinkedinAuthController(IMapper mapper, UserManager<User> userManager, IConfiguration config, PhotoController photoController)
         {
+            _photoController = photoController;
             _config = config;
             _userManager = userManager;
             _mapper = mapper;
@@ -47,9 +49,10 @@ namespace jsite.api.Controllers
             {
                 user = new User
                 {
-                    UserName = linkedinUser.Email,
+                    UserName = linkedinUser.Email.Split("@")[0],
+                    NickName = linkedinUser.LocalizedFirstName + " " + linkedinUser.LocalizedLastName,
                     Email = linkedinUser.Email,
-                    PhotoUrl = linkedinUser.PhotoUrl,
+                    PhotoUrl = await _photoController.UploadAvatarByUrl(linkedinUser.PhotoUrl),
                     RegisteredVia = "Linkedin",
                     Created = DateTime.Now,
                     LastActive = DateTime.Now
@@ -62,15 +65,6 @@ namespace jsite.api.Controllers
                 if (!res.Succeeded)
                     return BadRequest("error on adding role for user");
             }
-            else
-            {
-                user.PhotoUrl = linkedinUser.PhotoUrl;
-                user.LastActive = DateTime.Now;
-                var result = await _userManager.UpdateAsync(user);
-                if (!result.Succeeded)
-                return BadRequest("error on updating user photo");
-            }
-
             // generate the jwt for the local user...
             var userForToken = await _userManager.FindByEmailAsync(user.Email);
             if (userForToken == null)
@@ -113,17 +107,19 @@ namespace jsite.api.Controllers
             return linkedinUser;
         }
 
-        private async Task<string> GetEmail(){
+        private async Task<string> GetEmail()
+        {
             var uri = "https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))";
             string userData = await _httpClient.GetStringAsync(uri);
             Email email = JsonConvert.DeserializeObject<Email>(userData);
             return email.Elements[0].ElementHandle.EmailAddress;
         }
 
-        private async Task<string> GetPhotoUrl(){
+        private async Task<string> GetPhotoUrl()
+        {
             var uri = "https://api.linkedin.com/v2/me?projection=(profilePicture(displayImage~digitalmediaAsset:playableStreams))";
             string userData = await _httpClient.GetStringAsync(uri);
-            LinkedinPhoto linkedinPhoto =  JsonConvert.DeserializeObject<LinkedinPhoto>(userData);
+            LinkedinPhoto linkedinPhoto = JsonConvert.DeserializeObject<LinkedinPhoto>(userData);
             string photoUrl = linkedinPhoto.ProfilePicture.ProfilePictureDisplayImage.Elements[0].Identifiers[0].IdentifierIdentifier.AbsoluteUri.ToString();
 
             return photoUrl;
@@ -131,5 +127,5 @@ namespace jsite.api.Controllers
 
 
 
-}
+    }
 }

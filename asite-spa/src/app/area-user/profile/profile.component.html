@@ -1,8 +1,8 @@
-  <div><img src="{{user.photoUrl}}" class = "appAvatar"/></div>
+  <div><img src="{{user.photoUrl || '../../../../../assets/user.png'}}" class = "appAvatar"/></div>
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
-      <input matInput formControlName="userName">
+      <input matInput formControlName="nickName">
     </mat-form-field>
     <br>
     <mat-form-field appearance="outline" >

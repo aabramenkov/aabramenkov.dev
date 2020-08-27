@@ -6,6 +6,7 @@ namespace jsite.api.Models
 {
     public class User : IdentityUser<int>
     {
+        public string NickName{get;set;}
         public DateTime Created { get; set; }
         public DateTime LastActive { get; set; }
         public string RegisteredVia { get; set; }

@@ -27,9 +27,11 @@ namespace jsite.api.Controllers
         private readonly IConfiguration _config;
         private static readonly HttpClient _httpClient = new HttpClient();
 
+        private readonly PhotoController _photoController;
 
-        public FbAuthController(IMapper mapper, UserManager<User> userManager, IConfiguration config)
+        public FbAuthController(IMapper mapper, UserManager<User> userManager, IConfiguration config, PhotoController photoController)
         {
+            _photoController = photoController;
             _config = config;
             _userManager = userManager;
             _mapper = mapper;
@@ -46,9 +48,10 @@ namespace jsite.api.Controllers
             {
                 user = new User
                 {
-                    UserName = fbUser.Email,
+                    UserName = fbUser.Email.Split("@")[0],
+                    NickName = fbUser.Name,
                     Email = fbUser.Email,
-                    PhotoUrl = fbUser.Picture.Data.Url
+                    PhotoUrl = await _photoController.UploadAvatarByUrl(fbUser.Picture.Data.Url) 
                 };
                 var result = await _userManager.CreateAsync(user);
                 if (!result.Succeeded)
@@ -57,13 +60,6 @@ namespace jsite.api.Controllers
                 var res = _userManager.AddToRoleAsync(user, "User").Result;
                 if (!res.Succeeded)
                     return BadRequest("error on adding role for user");
-            }
-            else
-            {
-                user.PhotoUrl = fbUser.Picture.Data.Url;
-                var result = await _userManager.UpdateAsync(user);
-                if (!result.Succeeded)
-                return BadRequest("error on updating user photo");
             }
 
             // generate the jwt for the local user...
@@ -97,7 +93,7 @@ namespace jsite.api.Controllers
         {
             var uri = "https://graph.facebook.com/v6.0/me";
             var param = new Dictionary<string, string>(){
-                {"fields","id,email,picture"},
+                {"fields","id,email,picture,name"},
                 {"access_token", fbAccessToken}
             };
             var requestUri = new Uri(QueryHelpers.AddQueryString(uri, param));

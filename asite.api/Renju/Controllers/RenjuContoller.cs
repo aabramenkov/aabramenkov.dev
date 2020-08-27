@@ -30,7 +30,7 @@ namespace Renju.Controllers
             foreach (var userName in connectedUserNameList)
             {
                 User user = await _userManager.FindByNameAsync(userName);
-                Gamer gamer = new Gamer() { UserName = user.UserName, PhotoUrl = user.PhotoUrl };
+                Gamer gamer = new Gamer() { UserName = user.UserName,  NickName = user.NickName, PhotoUrl = user.PhotoUrl };
                 gamers.Add(gamer);
             }
 
